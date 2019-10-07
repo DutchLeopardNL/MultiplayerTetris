@@ -29,7 +29,16 @@ namespace Server.Communication
 		{
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
 			this.clients.Add(new ServerClient(newClient, this));
+
 			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+		}
+
+		public void Broadcast(string message)
+		{
+			foreach (var client in this.clients)
+			{
+				client.Write(message);
+			}
 		}
 	}
 }

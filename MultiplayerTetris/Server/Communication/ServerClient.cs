@@ -42,6 +42,7 @@ namespace Server.Communication
 		{
 			byte[] bytes = Encoding.ASCII.GetBytes(message);
 			this.stream.Write(bytes, 0, bytes.Length);
+			this.stream.Flush();
 		}
 	}
 }
