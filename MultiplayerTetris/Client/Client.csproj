@@ -46,7 +46,7 @@
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tetris\Tetrominoe.cs" />
+    <Compile Include="Tetris\DrawGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
