@@ -7,7 +7,25 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="344,126,0,0" VerticalAlignment="Top"/>
-
+       
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Button x:Name="StoneButton" Grid.Row="0" Grid.Column="0" Margin="30" Click="StoneButton_Click" >
+            <Image Source="Resources/Steen.png"></Image> </Button>
+        <Button x:Name="PaperButton" Grid.Row="1" Grid.Column="0" Margin="30" Click="Button_Click">
+            <Image Source="Resources/Papier.png"></Image>
+        </Button>
+        <Button x:Name="ScissorButton" Grid.Row="2" Grid.Column="0" Margin="30" Click="Button_Click_1">
+            <Image Source="Resources/Schaar.png"></Image>
+        </Button>
+        <Image Grid.Row="1" Grid.Column="1" Margin="5" Name="Yourchoice" />
     </Grid>
 </Window>
