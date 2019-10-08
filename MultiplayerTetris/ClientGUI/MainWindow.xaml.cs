@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,18 +31,58 @@ namespace ClientGUI
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
             chosenAttack = "Stone";
+            ShowImage();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
             chosenAttack = "Paper";
+            ShowImage();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
             chosenAttack = "Scissor";
+            ShowImage();
+        }
+
+        private void ShowImage()
+        {
+            Timer timer = new Timer();
+            timer.Interval = 3;
+            int timesRotated = 0;
+            int currentAngle = 0;
+            timer.Elapsed += (x,y) =>
+            {
+                if (timesRotated == 50)
+                {
+                    timer.Stop();
+                    return;
+                }
+                    
+                currentAngle += 10;
+                if (currentAngle == 360)
+                {
+                    currentAngle = 0;
+                    timesRotated++;
+                }
+
+                Dispatcher.Invoke(() =>
+                {
+                    RotateTransform transform = new RotateTransform();
+                    transform.CenterX = 150;
+                    transform.CenterY = 150;
+                    transform.Angle = currentAngle;
+                    if (currentAngle == 130)
+                    {
+                        this.Top += 5;
+                    }
+                    Yourchoice.RenderTransform = transform;
+                });
+            };
+            timer.Start();
         }
     }
 }

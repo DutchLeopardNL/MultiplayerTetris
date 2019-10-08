@@ -26,6 +26,9 @@
         <Button x:Name="ScissorButton" Grid.Row="2" Grid.Column="0" Margin="30" Click="Button_Click_1">
             <Image Source="Resources/Schaar.png"></Image>
         </Button>
-        <Image Grid.Row="1" Grid.Column="1" Margin="5" Name="Yourchoice" />
+        <Image Grid.Row="1" Grid.Column="1" Margin="5" Name="Yourchoice" >
+            <Image.RenderTransform>
+                <RotateTransform Angle="45"></RotateTransform>
+            </Image.RenderTransform></Image>
     </Grid>
 </Window>
