@@ -8,5 +8,6 @@ namespace ServerProject.GameLogics
 {
     class BotLogics
     {
+        
     }
 }

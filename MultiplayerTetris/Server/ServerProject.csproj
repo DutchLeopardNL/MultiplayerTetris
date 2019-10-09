@@ -45,14 +45,14 @@
   <ItemGroup>
     <Compile Include="Communication\Server.cs" />
     <Compile Include="Communication\ServerClient.cs" />
+    <Compile Include="GameLogics\BotLogics.cs" />
+    <Compile Include="GameLogics\SPSLogics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameLogics\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

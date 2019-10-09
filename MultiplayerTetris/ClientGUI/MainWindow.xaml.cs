@@ -38,6 +38,7 @@ namespace ClientGUI
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
             chosenAttack = "Stone";
             RotateImage();
+            
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

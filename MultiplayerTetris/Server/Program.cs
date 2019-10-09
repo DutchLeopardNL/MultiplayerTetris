@@ -15,11 +15,7 @@ namespace ServerProject
 		static void Main(string[] args)
 		{
             Server server = new Server(25565);
-            server.Start();
-            while (true)
-            {
-                server.Broadcast("Yeet");
-            }
+            server.Start();        
 			Console.ReadKey();
 		}
 	}
