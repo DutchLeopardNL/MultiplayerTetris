@@ -50,6 +50,7 @@ namespace ClientGUI.Communication
 
         public void Disconnect()
         {
+
             stream.Close();
             client.Close();
         }

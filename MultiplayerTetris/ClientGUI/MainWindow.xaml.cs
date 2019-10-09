@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientGUI.Communication;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,8 +23,13 @@ namespace ClientGUI
     public partial class MainWindow : Window
     {
         public string chosenAttack;
+        private Client client;
         public MainWindow()
         {
+            this.client = new Client();
+
+            client.Connect("127.0.0.1", 25565);
+
             InitializeComponent();
         }
 
@@ -31,24 +37,24 @@ namespace ClientGUI
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
             chosenAttack = "Stone";
-            ShowImage();
+            RotateImage();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
             chosenAttack = "Paper";
-            ShowImage();
+            RotateImage();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
             chosenAttack = "Scissor";
-            ShowImage();
+            RotateImage();
         }
 
-        private void ShowImage()
+        private void RotateImage()
         {
             Timer timer = new Timer();
             timer.Interval = 3;
@@ -56,7 +62,7 @@ namespace ClientGUI
             int currentAngle = 0;
             timer.Elapsed += (x,y) =>
             {
-                if (timesRotated == 50)
+                if (timesRotated == 5000)
                 {
                     timer.Stop();
                     return;

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 
-namespace Server.Communication
+namespace ServerProject.Communication
 {
 	public class ServerClient
 	{
