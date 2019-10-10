@@ -28,9 +28,9 @@ namespace ClientGUI
         {
             this.client = new Client();
 
-            client.Connect("127.0.0.1", 25565);
+            client.Connect("localhost", 10001);
 
-            InitializeComponent();
+			InitializeComponent();
         }
 
         private void StoneButton_Click(object sender, RoutedEventArgs e)

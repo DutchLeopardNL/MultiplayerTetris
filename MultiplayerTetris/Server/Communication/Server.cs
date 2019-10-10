@@ -26,6 +26,15 @@ namespace ServerProject.Communication
             Console.WriteLine("Server started listening....");
 		}
 
+		public void Stop()
+		{
+			foreach (var client in this.clients)
+			{
+				client.Disconnect();
+			}
+			this.listener.Stop();
+		}
+
 		private void OnConnect(IAsyncResult ar)
 		{
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);

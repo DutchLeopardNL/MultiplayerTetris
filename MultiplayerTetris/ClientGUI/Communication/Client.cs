@@ -12,13 +12,13 @@ namespace ClientGUI.Communication
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer;
-        private byte[] totalBuffer;
+        private string totalBuffer;
 
         public Client()
         {
             this.client = new TcpClient();
             this.buffer = new byte[1024];
-            this.totalBuffer = new byte[0];
+            this.totalBuffer = string.Empty;
         }
 
         public void Connect(string host, int port)
@@ -31,14 +31,25 @@ namespace ClientGUI.Communication
 
         private void OnRead(IAsyncResult ar)
         {
-            int byteRead = this.stream.EndRead(ar);
+            int bytesRead = this.stream.EndRead(ar);
+			string input = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+			string regex = "##";
+
+			while (input.Contains(regex))
+			{
+				string packet = input.Substring(0, input.IndexOf(regex));
+				input = input.Substring(input.IndexOf(regex) + regex.Length);
+
+				this.HandlePacket(packet);
+			}
+
+			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        public void HandlePacket()
+        public void HandlePacket(string packet)
         {
-
+			Console.WriteLine($"Server send: {packet}");
         }
 
         public void Write(string message)
@@ -50,9 +61,8 @@ namespace ClientGUI.Communication
 
         public void Disconnect()
         {
-
-            stream.Close();
-            client.Close();
+            this.stream.Close();
+            this.client.Close();
         }
     }
 }
