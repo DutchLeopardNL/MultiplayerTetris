@@ -8,6 +8,8 @@ namespace ServerProject.GameLogics
 {
     class SPSLogics
     {
+       
+
         string PlayerOneChoice;
         string PlayerTwoChoice;
         //Heel simpel

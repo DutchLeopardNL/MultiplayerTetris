@@ -12,6 +12,7 @@ namespace ServerProject.Communication
 	{
 		private TcpListener listener;
 		private List<ServerClient> clients;
+        
 
 		public Server(int port)
 		{
@@ -39,8 +40,10 @@ namespace ServerProject.Communication
 		{
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
 			this.clients.Add(new ServerClient(newClient, this));
+         
             Console.WriteLine("A new client Connected");
 			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+            Console.WriteLine(clients.Count);
 		}
 
 		public void Broadcast(string message)

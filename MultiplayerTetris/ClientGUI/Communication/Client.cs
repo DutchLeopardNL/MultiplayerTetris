@@ -16,6 +16,7 @@ namespace ClientGUI.Communication
 
         public Client()
         {
+
             this.client = new TcpClient();
             this.buffer = new byte[1024];
             this.totalBuffer = string.Empty;
@@ -49,7 +50,7 @@ namespace ClientGUI.Communication
 
         public void HandlePacket(string packet)
         {
-			Console.WriteLine($"Server send: {packet}");
+			Console.WriteLine($"Server sent: {packet}");
         }
 
         public void Write(string message)
