@@ -11,13 +11,13 @@ namespace ServerProject.Communication
 	public class Server
 	{
 		private TcpListener listener;
-		private List<ServerClient> clients;
-        
+		private Dictionary<ServerClient,int> clients;
+        private int p = 0;
 
 		public Server(int port)
 		{
 			this.listener = new TcpListener(IPAddress.Any, port);
-			this.clients = new List<ServerClient>();
+			this.clients = new Dictionary<ServerClient,int>();
 		}
 
 		public void Start()
@@ -29,28 +29,30 @@ namespace ServerProject.Communication
 
 		public void Stop()
 		{
-			foreach (var client in this.clients)
-			{
-				client.Disconnect();
+            foreach (KeyValuePair<ServerClient, int> client in this.clients)
+            {
+                
+				client.Key.Disconnect();
 			}
 			this.listener.Stop();
 		}
 
 		private void OnConnect(IAsyncResult ar)
 		{
+             
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
-			this.clients.Add(new ServerClient(newClient, this));
-         
-            Console.WriteLine("A new client Connected");
+			this.clients.Add(new ServerClient(newClient, this),p);
+            p++;
+            Console.WriteLine("A new client Connected " + p);
 			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
             Console.WriteLine(clients.Count);
 		}
 
 		public void Broadcast(string message)
 		{
-			foreach (var client in this.clients)
+			foreach (KeyValuePair<ServerClient,int> client in this.clients)
 			{
-				client.Write(message);
+				client.Key.Write(message);
 			}
 		}
 	}

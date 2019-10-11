@@ -13,6 +13,7 @@ namespace ServerProject.Communication
 		private Server server;
 		private NetworkStream stream;
 		private byte[] buffer;
+        public string[] namechoice;
 
 		public ServerClient(TcpClient client, Server server)
 		{
@@ -35,7 +36,9 @@ namespace ServerProject.Communication
 			{
 				string packet = input.Substring(0, input.IndexOf(regex));
 				input = input.Substring(input.IndexOf(regex) + regex.Length);
-
+                string[] seperator = { "::" };
+                string[] namechoice = packet.Split(seperator,2,StringSplitOptions.RemoveEmptyEntries);
+                
 				this.HandlePacket(packet);
 			}
 
