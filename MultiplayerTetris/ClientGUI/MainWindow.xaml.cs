@@ -40,11 +40,13 @@ namespace ClientGUI
 
         private void StoneButton_Click(object sender, RoutedEventArgs e)
         {
-            Opponentchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
+            
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
             chosenAttack =  $"{ClientId}::Stone";
             /*RotateImage();*/
-
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
             client.Write(chosenAttack + prefex);
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
@@ -53,6 +55,9 @@ namespace ClientGUI
             chosenAttack = $"{ClientId}::Paper";
             /*RotateImage();*/
             Console.WriteLine(chosenAttack + prefex);
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
             client.Write(chosenAttack + prefex);
         }
 
@@ -62,6 +67,9 @@ namespace ClientGUI
             chosenAttack = $"{ClientId}::Scissor";
             /*RotateImage();*/
             Console.WriteLine(chosenAttack + prefex);
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
             client.Write(chosenAttack + prefex);
         }
 
