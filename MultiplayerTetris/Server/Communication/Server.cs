@@ -36,7 +36,7 @@ namespace ServerProject.Communication
 			}
 			this.listener.Stop();
 		}
-
+        //Adds a new client to the Dictionary where p will be used as ID
 		private void OnConnect(IAsyncResult ar)
 		{
              
@@ -55,5 +55,15 @@ namespace ServerProject.Communication
 				client.Key.Write(message);
 			}
 		}
+        public void SendToClient(string message, int clientID)
+        {
+            foreach  (KeyValuePair<ServerClient, int> client in this.clients)
+            {
+                if (client.Value == clientID)
+                {
+                    client.Key.Write(message);
+                }
+            }
+        }
 	}
 }
