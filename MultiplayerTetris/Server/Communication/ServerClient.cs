@@ -51,10 +51,11 @@ namespace ServerProject.Communication
 		{
 			Console.WriteLine($"Received from {this.hostName}: {packet}");
 
-			if (!packet.Contains("::")) return;
-
-			string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
-			Console.WriteLine($"Name: {nameAndAnswer[0]} answered {nameAndAnswer[1]}");
+			if (packet.Contains("::"))
+			{
+				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
+				Console.WriteLine($"Name: {nameAndAnswer[0]} answered: {nameAndAnswer[1]}");
+			}
 		}
 
 		public void Write(string message)
