@@ -50,7 +50,11 @@ namespace ServerProject.Communication
 		public void HandlePacket(string packet)
 		{
 			Console.WriteLine($"Received from {this.hostName}: {packet}");
-			this.server.Broadcast(packet);
+
+			if (!packet.Contains("::")) return;
+
+			string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
+			Console.WriteLine($"Name: {nameAndAnswer[0]} answered {nameAndAnswer[1]}");
 		}
 
 		public void Write(string message)
