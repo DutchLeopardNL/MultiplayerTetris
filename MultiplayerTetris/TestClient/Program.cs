@@ -18,7 +18,7 @@ namespace TestClient
 			while (input != "stop")
 			{
 				input = Console.ReadLine();
-				client.Write($"{input}##");
+				client.Write(input);
 			}
 
 			client.Disconnect();

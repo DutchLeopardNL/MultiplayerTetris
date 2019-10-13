@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using System.Net;
 
 namespace ServerProject.Communication
 {
@@ -11,6 +12,7 @@ namespace ServerProject.Communication
 	{
 		private TcpClient client;
 		private Server server;
+		private string hostName;
 		private NetworkStream stream;
 		private byte[] buffer;
 
@@ -20,6 +22,9 @@ namespace ServerProject.Communication
 			this.server = server;
 			this.stream = this.client.GetStream();
 			this.buffer = new byte[1024];
+
+			IPEndPoint iPEndPoint = (IPEndPoint)this.client.Client.RemoteEndPoint;
+			this.hostName = Dns.GetHostEntry(iPEndPoint.Address).HostName;
 
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 		}
@@ -44,13 +49,14 @@ namespace ServerProject.Communication
 
 		public void HandlePacket(string packet)
 		{
-			Console.WriteLine($"Received from client: {packet}");
-			this.server.Broadcast($"{packet}##");
+			Console.WriteLine($"Received from {this.hostName}: {packet}");
+			this.server.Broadcast(packet);
 		}
 
 		public void Write(string message)
 		{
-			byte[] bytes = Encoding.ASCII.GetBytes(message);
+			string regex = "##";
+			byte[] bytes = Encoding.ASCII.GetBytes($"{message}{regex}");
 			this.stream.Write(bytes, 0, bytes.Length);
 			this.stream.Flush();
 		}

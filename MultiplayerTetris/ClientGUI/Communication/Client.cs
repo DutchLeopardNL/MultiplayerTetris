@@ -54,8 +54,9 @@ namespace ClientGUI.Communication
 
         public void Write(string message)
         {
-            byte[] bytes = Encoding.ASCII.GetBytes(message);
-            this.stream.Write(bytes, 0, bytes.Length);
+			string regex = "##";
+			byte[] bytes = Encoding.ASCII.GetBytes($"{message}{regex}");
+			this.stream.Write(bytes, 0, bytes.Length);
             this.stream.Flush();
         }
 
