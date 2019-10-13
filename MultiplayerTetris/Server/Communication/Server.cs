@@ -38,8 +38,12 @@ namespace ServerProject.Communication
 		private void OnConnect(IAsyncResult ar)
 		{
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
+			string playerID = this.clients.Count == 0 ? "player1" : "player2";
+
 			this.clients.Add(new ServerClient(newClient, this));
             Console.WriteLine("A new client Connected");
+
+			this.Broadcast(playerID);
 			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
 		}
 

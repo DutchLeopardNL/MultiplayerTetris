@@ -13,18 +13,20 @@ namespace ClientGUI.Communication
         private NetworkStream stream;
         private byte[] buffer;
         private string totalBuffer;
+		public string playerID { get; set; }
 
         public Client()
         {
+			this.playerID = null;
             this.client = new TcpClient();
             this.buffer = new byte[1024];
             this.totalBuffer = string.Empty;
-        }
+		}
 
         public void Connect(string host, int port)
         {
             this.client.Connect(host, port);
-            this.stream = client.GetStream();
+			this.stream = client.GetStream();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
@@ -50,6 +52,12 @@ namespace ClientGUI.Communication
         public void HandlePacket(string packet)
         {
 			Console.WriteLine($"Server send: {packet}");
+
+			if (packet.Contains("player") && this.playerID == null)
+			{
+				this.playerID = packet;
+				Console.WriteLine($"bitch i know who i am {playerID}");
+			}
         }
 
         public void Write(string message)

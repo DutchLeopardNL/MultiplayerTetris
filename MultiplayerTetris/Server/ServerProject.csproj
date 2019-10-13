@@ -47,6 +47,7 @@
     <Compile Include="Communication\ServerClient.cs" />
     <Compile Include="GameLogics\BotLogics.cs" />
     <Compile Include="GameLogics\SPSLogics.cs" />
+    <Compile Include="GameLogics\Weapon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -37,6 +37,7 @@ namespace ClientGUI
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
             chosenAttack = "Stone";
+			this.client.Write($"{client.playerID}::{chosenAttack}");
             RotateImage();
             
         }
@@ -45,13 +46,15 @@ namespace ClientGUI
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
             chosenAttack = "Paper";
-            RotateImage();
+			this.client.Write($"{client.playerID}::{chosenAttack}");
+			RotateImage();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
             chosenAttack = "Scissor";
+			this.client.Write($"{client.playerID}::{chosenAttack}");
             RotateImage();
         }
 

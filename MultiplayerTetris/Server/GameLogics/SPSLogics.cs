@@ -6,61 +6,61 @@ using System.Threading.Tasks;
 
 namespace ServerProject.GameLogics
 {
-    class SPSLogics
+    public class SPSLogics
     {
-        string PlayerOneChoice;
-        string PlayerTwoChoice;
-        //Heel simpel
-        public void PlayGame()
+		// -1: player1 wins
+		// 0: tie
+		// 1: player2 wins
+
+        public int PlayGame(Weapon wPlayer1, Weapon wPlayer2)
         {
-            string OneWin = "Player one won!!";
-            string TwoWin = "Player two won!!";
-            String Tie = "Its a Tie!!";
-            if(PlayerOneChoice == "Stone")
+            if (wPlayer1 == Weapon.Rock)
             {
-                if (PlayerTwoChoice == "Stone")
+                if (wPlayer2 == Weapon.Rock)
                 {
-                    Console.WriteLine(Tie);
+					return 0;
                 }
-                else if (PlayerTwoChoice == "Paper")
+                else if (wPlayer2 == Weapon.Paper)
                 {
-                    Console.WriteLine(TwoWin);
+					return 1;
                 }
-                else if (PlayerTwoChoice == "Scissor")
+                else if (wPlayer2 == Weapon.Scissors)
                 {
-                    Console.WriteLine(OneWin);
+					return -1;
                 }             
             }
-            if (PlayerOneChoice == "Paper")
+            else if (wPlayer1 == Weapon.Paper)
             {
-                if (PlayerTwoChoice == "Stone")
+                if (wPlayer2 == Weapon.Rock)
                 {
-                    Console.WriteLine(OneWin);
+					return -1;
                 }
-                else if (PlayerTwoChoice == "Paper")
+                else if (wPlayer2 == Weapon.Paper)
                 {
-                    Console.WriteLine(Tie);
+					return 0;
                 }
-                else if (PlayerTwoChoice == "Scissor")
+                else if (wPlayer2 == Weapon.Scissors)
                 {
-                    Console.WriteLine(TwoWin);
+					return 1;
                 }
             }
-            if (PlayerOneChoice == "Scissor")
+            else if (wPlayer1 == Weapon.Scissors)
             {
-                if (PlayerTwoChoice == "Stone")
+                if (wPlayer2 == Weapon.Rock)
                 {
-                    Console.WriteLine(TwoWin);
+					return 1;
                 }
-                else if (PlayerTwoChoice == "Paper")
+                else if (wPlayer2 == Weapon.Paper)
                 {
-                    Console.WriteLine(OneWin);
+					return -1;
                 }
-                else if (PlayerTwoChoice == "Scissor")
+                else if (wPlayer2 == Weapon.Scissors)
                 {
-                    Console.WriteLine(Tie);
+					return 0;
                 }
             }
+
+			return 0;
         }
     }
 }
