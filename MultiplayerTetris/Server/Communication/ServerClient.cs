@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using ServerProject.GameLogics;
 
 namespace ServerProject.Communication
 {
@@ -16,6 +17,9 @@ namespace ServerProject.Communication
 		private NetworkStream stream;
 		private byte[] buffer;
         public string[] namechoice;
+        private string weapon;
+        private string name;
+        private Weapon weaponchoice;
 
 		public ServerClient(TcpClient client, Server server)
 		{
@@ -41,8 +45,7 @@ namespace ServerProject.Communication
 			{
 				string packet = input.Substring(0, input.IndexOf(regex));
 				input = input.Substring(input.IndexOf(regex) + regex.Length);
-                string[] seperator = { "::" };
-                string[] namechoice = packet.Split(seperator,2,StringSplitOptions.RemoveEmptyEntries);
+            
                 
 				this.HandlePacket(packet);
 			}
@@ -54,10 +57,27 @@ namespace ServerProject.Communication
 		{
 			Console.WriteLine($"Received from {this.hostName}: {packet}");
 
-			if (packet.Contains("::"))
+			if (packet.Contains("::::"))
 			{
-				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
-				Console.WriteLine($"Name: {nameAndAnswer[0]} answered: {nameAndAnswer[1]}");
+				string[] nameAndAnswer = packet.Split(new[] { "::::" }, StringSplitOptions.None);
+                name = nameAndAnswer[0];
+                weapon = nameAndAnswer[1];
+                if(weapon == "Stone")
+                {
+                    weaponchoice = GameLogics.Weapon.Rock;
+                }
+                else if(weapon == "Scissor")
+                {
+                    weaponchoice = GameLogics.Weapon.Scissors;
+                }
+                else
+                {
+                    weaponchoice = GameLogics.Weapon.Paper;
+                }
+                server.attackchoice.Add(name, weaponchoice);
+
+				Console.WriteLine($"Name: {name} answered: {weapon}");
+                Console.WriteLine(server.attackchoice.Count);
 			}
 		}
 

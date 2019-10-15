@@ -5,18 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using ServerProject.GameLogics;
 
 namespace ServerProject.Communication
 {
     public class Server
     {
         private TcpListener listener;
+        private SPSLogics onlinegame;
         private List<ServerClient> clients;
+        public Dictionary<string, GameLogics.Weapon> attackchoice { get; set; }
 
         public Server(int port)
         {
             this.listener = new TcpListener(IPAddress.Any, port);
             this.clients = new List<ServerClient>();
+            this.attackchoice = new Dictionary<string,GameLogics.Weapon>();
+            Task.Run(Listen);
         }
 
         public void Start()
@@ -24,6 +29,13 @@ namespace ServerProject.Communication
             this.listener.Start();
             this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
             Console.WriteLine("Server started listening....");
+        }
+        private async Task Listen()
+        {
+            if(attackchoice.Count == 2)
+            {
+                Console.WriteLine("Outcome = " + onlinegame.PlayGame(attackchoice.Values.ElementAt(0), attackchoice.Values.ElementAt(1)));
+            }
         }
 
         public void Stop()
@@ -42,7 +54,6 @@ namespace ServerProject.Communication
 
             this.clients.Add(new ServerClient(newClient, this));
             Console.WriteLine("A new client Connected");
-
             this.Broadcast(playerID);
             this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
