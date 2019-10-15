@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Communication\Server.cs" />
     <Compile Include="Communication\ServerClient.cs" />
+    <Compile Include="Data\PlayerScore.cs" />
     <Compile Include="GameLogics\BotLogics.cs" />
     <Compile Include="GameLogics\SPSLogics.cs" />
     <Compile Include="GameLogics\Weapon.cs" />

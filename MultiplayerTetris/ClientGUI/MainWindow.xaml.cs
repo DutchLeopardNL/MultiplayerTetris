@@ -28,7 +28,7 @@ namespace ClientGUI
         public string ClientId { set; get; }
         public MainWindow()
         {
-            this.client = new Client();
+            this.client = new Client(this);
             //string ClientId;
             client.Connect("localhost", 10001);
 
@@ -39,11 +39,11 @@ namespace ClientGUI
         {
             
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
-            /*RotateImage();*/
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Rock");
+            this.client.Write($"{client.playerID}::Rock");
+            RotateImage();
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
@@ -51,7 +51,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Paper");
+            this.client.Write($"{client.playerID}::Paper");
         }
 
         private void ScissorButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +60,16 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Scissors");
+           
+            this.client.Write($"{client.playerID}::Scissors");
+        }
+        public void ResetGame()
+        {
+            result.Text = "";
+            StoneButton.Click += StoneButton_Click;
+            PaperButton.Click += PaperButton_Click;
+            ScissorButton.Click += ScissorButton_Click;
+            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Blank.png", UriKind.Relative));
         }
 
 
@@ -112,17 +121,11 @@ namespace ClientGUI
             public const int SW_SHOW = 5;
         }
 
-        private void ShowConsole_Click(object sender, RoutedEventArgs e)
-        {
-            NativeMethods.AllocConsole();
-            Console.WriteLine("Console text");
-        }
+     
 
-      
-
-        private void CloseConsole_Click(object sender, RoutedEventArgs e)
+        private void ResetGameButton_Click(object sender, RoutedEventArgs e)
         {
-            NativeMethods.FreeConsole();
+            ResetGame();
         }
     } }
  

@@ -13,10 +13,12 @@ namespace ClientGUI.Communication
         private NetworkStream stream;
         private byte[] buffer;
         private string totalBuffer;
+		private MainWindow mainWindow;
 		public string playerID { get; set; }
 
-        public Client()
+        public Client(MainWindow mainWindow)
         {
+			this.mainWindow = mainWindow;
 			this.playerID = null;
             this.client = new TcpClient();
             this.buffer = new byte[1024];
@@ -49,14 +51,55 @@ namespace ClientGUI.Communication
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
-        public void HandlePacket(string packet)
+		public delegate void UpdateTextCallback(string message);
+
+		private void UpdateText(string message)
+		{
+			this.mainWindow.result.Text = (message + "\n");
+		}
+
+		public void HandlePacket(string packet)
         {
 			Console.WriteLine($"Server send: {packet}");
 
 			if (packet.Contains("player") && this.playerID == null)
 			{
 				this.playerID = packet;
-				Console.WriteLine($"bitch i know who i am {playerID}");
+			}
+			else if (packet.Contains("result"))
+			{
+				int winLoseTie = int.Parse(packet.Split(new[] { "::" }, StringSplitOptions.None)[1]);
+				switch (winLoseTie)
+				{
+					case -1:
+						if (this.playerID == "player1")
+						{
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
+                      
+						}
+						else
+						{
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
+                          
+                        }
+						break;
+					case 0:
+						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!");
+                   
+                        break;
+					case 1:
+						if (this.playerID == "player1")
+						{
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
+                       
+                        }
+						else
+						{
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
+                        
+                        }
+						break;
+				}
 			}
         }
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using ServerProject.GameLogics;
 
 namespace ServerProject.Communication
 {
@@ -12,10 +13,13 @@ namespace ServerProject.Communication
 	{
 		private TcpClient client;
 		private Server server;
-		private string hostName;
+		public string hostName { get; set; }
 		private NetworkStream stream;
 		private byte[] buffer;
         public string[] namechoice;
+        private string weapon;
+        private string name;
+		private static object lockObject = new object();
 
 		public ServerClient(TcpClient client, Server server)
 		{
@@ -41,8 +45,7 @@ namespace ServerProject.Communication
 			{
 				string packet = input.Substring(0, input.IndexOf(regex));
 				input = input.Substring(input.IndexOf(regex) + regex.Length);
-                //string[] seperator = { "::" };
-                //string[] namechoice = packet.Split(seperator,2,StringSplitOptions.RemoveEmptyEntries);
+            
                 
 				this.HandlePacket(packet);
 			}
@@ -57,7 +60,16 @@ namespace ServerProject.Communication
 			if (packet.Contains("::"))
 			{
 				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
-				Console.WriteLine($"Name: {nameAndAnswer[0]} answered: {nameAndAnswer[1]}");
+                name = nameAndAnswer[0];
+                weapon = nameAndAnswer[1];
+
+				lock (lockObject)
+				{
+					this.server.attackchoice.Add(name, (Weapon)Enum.Parse(typeof(Weapon), weapon));
+				}
+
+				Console.WriteLine($"Name: {name} answered: {weapon}");
+                Console.WriteLine(server.attackchoice.Count);
 			}
 		}
 
