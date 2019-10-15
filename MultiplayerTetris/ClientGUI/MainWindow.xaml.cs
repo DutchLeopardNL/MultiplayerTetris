@@ -43,6 +43,7 @@ namespace ClientGUI
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
             this.client.Write($"{client.playerID}::Rock");
+            RotateImage();
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
@@ -59,7 +60,16 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
+           
             this.client.Write($"{client.playerID}::Scissors");
+        }
+        public void ResetGame()
+        {
+            result.Text = "";
+            StoneButton.Click += StoneButton_Click;
+            PaperButton.Click += PaperButton_Click;
+            ScissorButton.Click += ScissorButton_Click;
+            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Blank.png", UriKind.Relative));
         }
 
 
@@ -111,17 +121,11 @@ namespace ClientGUI
             public const int SW_SHOW = 5;
         }
 
-        private void ShowConsole_Click(object sender, RoutedEventArgs e)
-        {
-            NativeMethods.AllocConsole();
-            Console.WriteLine("Console text");
-        }
+     
 
-      
-
-        private void CloseConsole_Click(object sender, RoutedEventArgs e)
+        private void ResetGameButton_Click(object sender, RoutedEventArgs e)
         {
-            NativeMethods.FreeConsole();
+            ResetGame();
         }
     } }
  

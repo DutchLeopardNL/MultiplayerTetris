@@ -39,9 +39,9 @@ namespace ServerProject.Communication
         {
 			while (running)
 			{
-				if (attackchoice.Count == 2)
-				{
-					int result = onlinegame.PlayGame(attackchoice.Values.ElementAt(0), attackchoice.Values.ElementAt(1));
+                if (attackchoice.Count == 2)
+                {
+                    int result = onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
 					attackchoice.Clear();

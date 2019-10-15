@@ -55,7 +55,7 @@ namespace ClientGUI.Communication
 
 		private void UpdateText(string message)
 		{
-			this.mainWindow.result.AppendText(message + "\n");
+			this.mainWindow.result.Text = (message + "\n");
 		}
 
 		public void HandlePacket(string packet)
@@ -72,27 +72,32 @@ namespace ClientGUI.Communication
 				switch (winLoseTie)
 				{
 					case -1:
-						if (this.playerID == "player2")
+						if (this.playerID == "player1")
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
+                      
 						}
 						else
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
-						}
+                          
+                        }
 						break;
 					case 0:
 						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!");
-						break;
+                   
+                        break;
 					case 1:
-						if (this.playerID == "player2")
+						if (this.playerID == "player1")
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
-						}
+                       
+                        }
 						else
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
-						}
+                        
+                        }
 						break;
 				}
 			}
