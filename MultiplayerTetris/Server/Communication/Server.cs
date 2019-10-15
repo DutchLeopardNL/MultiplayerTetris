@@ -11,12 +11,13 @@ namespace ServerProject.Communication
 	public class Server
 	{
 		private TcpListener listener;
-		private List<ServerClient> clients;
+		private Dictionary<ServerClient,int> clients;
+        private int p = 0;
 
 		public Server(int port)
 		{
 			this.listener = new TcpListener(IPAddress.Any, port);
-			this.clients = new List<ServerClient>();
+			this.clients = new Dictionary<ServerClient,int>();
 		}
 
 		public void Start()
@@ -28,15 +29,17 @@ namespace ServerProject.Communication
 
 		public void Stop()
 		{
-			foreach (var client in this.clients)
-			{
-				client.Disconnect();
+            foreach (KeyValuePair<ServerClient, int> client in this.clients)
+            {
+                
+				client.Key.Disconnect();
 			}
 			this.listener.Stop();
 		}
-
+        //Adds a new client to the Dictionary where p will be used as ID
 		private void OnConnect(IAsyncResult ar)
 		{
+             
 			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
 			string playerID = this.clients.Count == 0 ? "player1" : "player2";
 
@@ -45,14 +48,25 @@ namespace ServerProject.Communication
 
 			this.Broadcast(playerID);
 			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+            Console.WriteLine(clients.Count);
 		}
 
 		public void Broadcast(string message)
 		{
-			foreach (var client in this.clients)
+			foreach (KeyValuePair<ServerClient,int> client in this.clients)
 			{
-				client.Write(message);
+				client.Key.Write(message);
 			}
 		}
+        public void SendToClient(string message, int clientID)
+        {
+            foreach  (KeyValuePair<ServerClient, int> client in this.clients)
+            {
+                if (client.Value == clientID)
+                {
+                    client.Key.Write(message);
+                }
+            }
+        }
 	}
 }

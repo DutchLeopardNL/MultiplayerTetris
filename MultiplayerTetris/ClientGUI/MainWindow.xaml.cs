@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 namespace ClientGUI
 {
@@ -23,40 +25,54 @@ namespace ClientGUI
     public partial class MainWindow : Window
     {
         public string chosenAttack;
+       
         private Client client;
+        private string prefex = "##";
+        public string ClientId { set; get; }
         public MainWindow()
         {
             this.client = new Client();
-
+            string ClientId;
             client.Connect("localhost", 10001);
 
-			InitializeComponent();
+            InitializeComponent();
         }
 
         private void StoneButton_Click(object sender, RoutedEventArgs e)
         {
-            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
-            chosenAttack = "Stone";
-			this.client.Write($"{client.playerID}::{chosenAttack}");
-            RotateImage();
             
+            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
+            chosenAttack =  $"{ClientId}::Stone";
+            /*RotateImage();*/
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
+            client.Write(chosenAttack + prefex);
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
-            chosenAttack = "Paper";
-			this.client.Write($"{client.playerID}::{chosenAttack}");
-			RotateImage();
+            chosenAttack = $"{ClientId}::Paper";
+            /*RotateImage();*/
+            Console.WriteLine(chosenAttack + prefex);
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
+            client.Write(chosenAttack + prefex);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void ScissorButton_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
-            chosenAttack = "Scissor";
-			this.client.Write($"{client.playerID}::{chosenAttack}");
-            RotateImage();
+            chosenAttack = $"{ClientId}::Scissor";
+            /*RotateImage();*/
+            Console.WriteLine(chosenAttack + prefex);
+            StoneButton.Click -= StoneButton_Click;
+            PaperButton.Click -= PaperButton_Click;
+            ScissorButton.Click -= ScissorButton_Click;
+            client.Write(chosenAttack + prefex);
         }
+
 
         private void RotateImage()
         {
@@ -64,14 +80,14 @@ namespace ClientGUI
             timer.Interval = 3;
             int timesRotated = 0;
             int currentAngle = 0;
-            timer.Elapsed += (x,y) =>
+            timer.Elapsed += (x, y) =>
             {
                 if (timesRotated == 5000)
                 {
                     timer.Stop();
                     return;
                 }
-                    
+
                 currentAngle += 10;
                 if (currentAngle == 360)
                 {
@@ -94,5 +110,29 @@ namespace ClientGUI
             };
             timer.Start();
         }
-    }
-}
+        static class NativeMethods
+        {
+            [DllImport("Kernel32.dll")]
+            public static extern void AllocConsole();
+
+            [DllImport("Kernel32")]
+            public static extern void FreeConsole();
+
+            public const int SW_HIDE = 0;
+            public const int SW_SHOW = 5;
+        }
+
+        private void ShowConsole_Click(object sender, RoutedEventArgs e)
+        {
+            NativeMethods.AllocConsole();
+            Console.WriteLine("Console text");
+        }
+
+      
+
+        private void CloseConsole_Click(object sender, RoutedEventArgs e)
+        {
+            NativeMethods.FreeConsole();
+        }
+    } }
+ 

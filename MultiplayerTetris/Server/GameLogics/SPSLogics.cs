@@ -62,5 +62,24 @@ namespace ServerProject.GameLogics
 
 			return 0;
         }
+        public void PlayGame()
+        {
+           
+            switch (answer)
+            {
+                case "Stone":
+                    Case1();
+                    break;
+            
+                case "Paper":
+                    Case2();
+                    break;
+
+                case "Scissor":
+                    Case3();
+                    break;
+            }
+          
+        }
     }
 }
