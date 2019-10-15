@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using ServerProject.GameLogics;
+using ServerProject.Data;
 using System.Threading;
 
 namespace ServerProject.Communication
@@ -16,6 +17,7 @@ namespace ServerProject.Communication
         private SPSLogics onlinegame;
         private List<ServerClient> clients;
         public Dictionary<string, GameLogics.Weapon> attackchoice { get; set; }
+		private List<PlayerScore> playerScores;
 		private bool running;
 
         public Server(int port)
@@ -24,6 +26,7 @@ namespace ServerProject.Communication
             this.listener = new TcpListener(IPAddress.Any, port);
             this.clients = new List<ServerClient>();
             this.attackchoice = new Dictionary<string, GameLogics.Weapon>();
+			this.playerScores = new List<PlayerScore>();
 			this.running = true;
         }
 
@@ -44,6 +47,7 @@ namespace ServerProject.Communication
                     int result = onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
+					this.SaveScores();
 					attackchoice.Clear();
 				}
 
@@ -63,7 +67,7 @@ namespace ServerProject.Communication
         private void OnConnect(IAsyncResult ar)
         {
             TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
-            string playerID = this.clients.Count == 0 ? "player1" : "player2"; //Detemen if the connected client is player1 or player2
+            string playerID = this.clients.Count == 0 ? "player1" : "player2"; //Determen if the connected client is player1 or player2
 
             this.clients.Add(new ServerClient(newClient, this));
             Console.WriteLine("A new client Connected");
@@ -87,5 +91,6 @@ namespace ServerProject.Communication
 				//TODO: Implement FileIO to read/write scores per hostname
 			}
 		}
+
     }
 }
