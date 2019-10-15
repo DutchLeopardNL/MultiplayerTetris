@@ -23,16 +23,13 @@ namespace ClientGUI
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {
-        public string chosenAttack;
-       
+    {  
         private Client client;
-        private string prefex = "##";
         public string ClientId { set; get; }
         public MainWindow()
         {
             this.client = new Client();
-            string ClientId;
+            //string ClientId;
             client.Connect("localhost", 10001);
 
             InitializeComponent();
@@ -42,35 +39,28 @@ namespace ClientGUI
         {
             
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
-            chosenAttack =  $"{ClientId}::Stone";
             /*RotateImage();*/
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.playerID}::{chosenAttack}");
+            this.client.Write($"{ClientId}::Rock");
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
-            chosenAttack = $"{ClientId}::Paper";
-            /*RotateImage();*/
-            Console.WriteLine(chosenAttack + prefex);
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.playerID}::{chosenAttack}");
+            this.client.Write($"{ClientId}::Paper");
         }
 
         private void ScissorButton_Click(object sender, RoutedEventArgs e)
         {
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
-            chosenAttack = $"{ClientId}::Scissor";
-            /*RotateImage();*/
-            Console.WriteLine(chosenAttack + prefex);
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.playerID}::{chosenAttack}");
+            this.client.Write($"{ClientId}::Scissors");
         }
 
 

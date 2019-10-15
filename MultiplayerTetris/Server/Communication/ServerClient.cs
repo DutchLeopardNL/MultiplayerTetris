@@ -41,8 +41,8 @@ namespace ServerProject.Communication
 			{
 				string packet = input.Substring(0, input.IndexOf(regex));
 				input = input.Substring(input.IndexOf(regex) + regex.Length);
-                string[] seperator = { "::" };
-                string[] namechoice = packet.Split(seperator,2,StringSplitOptions.RemoveEmptyEntries);
+                //string[] seperator = { "::" };
+                //string[] namechoice = packet.Split(seperator,2,StringSplitOptions.RemoveEmptyEntries);
                 
 				this.HandlePacket(packet);
 			}
