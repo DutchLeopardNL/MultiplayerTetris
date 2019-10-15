@@ -1,0 +1,14 @@
+﻿<Window x:Class="ClientGUI.OnlineSolo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ClientGUI"
+        mc:Ignorable="d"
+        Title="OnlineSolo" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="Onlinebtn" Content="Online" HorizontalAlignment="Left" Margin="355,88,0,0" VerticalAlignment="Top" Width="75" Click="Onlinebtn_Click" ></Button>
+        <Button x:Name="Solobtn" Content="Solo" HorizontalAlignment="Left" Margin="355,196,0,0" VerticalAlignment="Top" Width="75" Click="Solobtn_Click"></Button>
+
+    </Grid>
+</Window>
