@@ -56,7 +56,36 @@ namespace ClientGUI.Communication
 			if (packet.Contains("player") && this.playerID == null)
 			{
 				this.playerID = packet;
-				Console.WriteLine($"bitch i know who i am {playerID}");
+			}
+			else if (packet.Contains("result"))
+			{
+				int winLoseTie = int.Parse(packet.Split(new[] { "::" }, StringSplitOptions.None)[1]);
+				switch (winLoseTie)
+				{
+					case -1:
+						if (this.playerID == "player1")
+						{
+							Console.WriteLine("I won bitches");
+						}
+						else
+						{
+							Console.WriteLine("Lost");
+						}
+						break;
+					case 0:
+						Console.WriteLine("It's a tie");
+						break;
+					case 1:
+						if (this.playerID == "player1")
+						{
+							Console.WriteLine("Lost");
+						}
+						else
+						{
+							Console.WriteLine("I won bitches");
+						}
+						break;
+				}
 			}
         }
 

@@ -19,7 +19,7 @@ namespace ServerProject.Communication
         public string[] namechoice;
         private string weapon;
         private string name;
-        private Weapon weaponchoice;
+		private static Object lockObject = new object();
 
 		public ServerClient(TcpClient client, Server server)
 		{
@@ -57,24 +57,16 @@ namespace ServerProject.Communication
 		{
 			Console.WriteLine($"Received from {this.hostName}: {packet}");
 
-			if (packet.Contains("::::"))
+			if (packet.Contains("::"))
 			{
-				string[] nameAndAnswer = packet.Split(new[] { "::::" }, StringSplitOptions.None);
+				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
                 name = nameAndAnswer[0];
                 weapon = nameAndAnswer[1];
-                if(weapon == "Stone")
-                {
-                    weaponchoice = GameLogics.Weapon.Rock;
-                }
-                else if(weapon == "Scissor")
-                {
-                    weaponchoice = GameLogics.Weapon.Scissors;
-                }
-                else
-                {
-                    weaponchoice = GameLogics.Weapon.Paper;
-                }
-                server.attackchoice.Add(name, weaponchoice);
+
+				lock (lockObject)
+				{
+					this.server.attackchoice.Add(name, (Weapon)Enum.Parse(typeof(Weapon), weapon));
+				}
 
 				Console.WriteLine($"Name: {name} answered: {weapon}");
                 Console.WriteLine(server.attackchoice.Count);

@@ -39,11 +39,10 @@ namespace ClientGUI
         {
             
             Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
-            /*RotateImage();*/
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Rock");
+            this.client.Write($"{client.playerID}::Rock");
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
@@ -51,7 +50,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Paper");
+            this.client.Write($"{client.playerID}::Paper");
         }
 
         private void ScissorButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +59,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{ClientId}::Scissors");
+            this.client.Write($"{client.playerID}::Scissors");
         }
 
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using ServerProject.GameLogics;
+using System.Threading;
 
 namespace ServerProject.Communication
 {
@@ -15,13 +16,15 @@ namespace ServerProject.Communication
         private SPSLogics onlinegame;
         private List<ServerClient> clients;
         public Dictionary<string, GameLogics.Weapon> attackchoice { get; set; }
+		private bool running;
 
         public Server(int port)
         {
+			this.onlinegame = new SPSLogics();
             this.listener = new TcpListener(IPAddress.Any, port);
             this.clients = new List<ServerClient>();
-            this.attackchoice = new Dictionary<string,GameLogics.Weapon>();
-            Task.Run(Listen);
+            this.attackchoice = new Dictionary<string, GameLogics.Weapon>();
+			this.running = true;
         }
 
         public void Start()
@@ -29,13 +32,24 @@ namespace ServerProject.Communication
             this.listener.Start();
             this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
             Console.WriteLine("Server started listening....");
+
+			new Thread(new ThreadStart(Listen)).Start();
         }
-        private async Task Listen()
+        private void Listen()
         {
-            if(attackchoice.Count == 2)
-            {
-                Console.WriteLine("Outcome = " + onlinegame.PlayGame(attackchoice.Values.ElementAt(0), attackchoice.Values.ElementAt(1)));
-            }
+			while (running)
+			{
+
+				if (attackchoice.Count == 2)
+				{
+					int result = onlinegame.PlayGame(attackchoice.Values.ElementAt(0), attackchoice.Values.ElementAt(1));
+					this.Broadcast($"result::{result}");
+
+					attackchoice.Clear();
+				}
+
+				Thread.Sleep(1000);
+			}
         }
 
         public void Stop()
