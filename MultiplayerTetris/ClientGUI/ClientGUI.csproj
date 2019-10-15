@@ -77,10 +77,17 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="OnlineSolo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NameScreen.xaml.cs">
       <DependentUpon>NameScreen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OnlineSolo.xaml.cs">
+      <DependentUpon>OnlineSolo.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

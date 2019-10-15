@@ -8,65 +8,51 @@ using System.Net.Sockets;
 
 namespace ServerProject.Communication
 {
-	public class Server
-	{
-		private TcpListener listener;
-		private Dictionary<ServerClient,int> clients;
-        private int p = 0;
+    public class Server
+    {
+        private TcpListener listener;
+        private List<ServerClient> clients;
 
-		public Server(int port)
-		{
-			this.listener = new TcpListener(IPAddress.Any, port);
-			this.clients = new Dictionary<ServerClient,int>();
-		}
+        public Server(int port)
+        {
+            this.listener = new TcpListener(IPAddress.Any, port);
+            this.clients = new List<ServerClient>();
+        }
 
-		public void Start()
-		{
-			this.listener.Start();
-			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+        public void Start()
+        {
+            this.listener.Start();
+            this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
             Console.WriteLine("Server started listening....");
-		}
+        }
 
-		public void Stop()
-		{
-            foreach (KeyValuePair<ServerClient, int> client in this.clients)
+        public void Stop()
+        {
+            foreach (var client in this.clients)
             {
-                
-				client.Key.Disconnect();
-			}
-			this.listener.Stop();
-		}
-        //Adds a new client to the Dictionary where p will be used as ID
-		private void OnConnect(IAsyncResult ar)
-		{
-             
-			TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
-			string playerID = this.clients.Count == 0 ? "player1" : "player2";
+                client.Disconnect();
+            }
+            this.listener.Stop();
+        }
 
-			this.clients.Add(new ServerClient(newClient, this));
+        private void OnConnect(IAsyncResult ar)
+        {
+            TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
+            string playerID = this.clients.Count == 0 ? "player1" : "player2";
+
+            this.clients.Add(new ServerClient(newClient, this));
             Console.WriteLine("A new client Connected");
 
-			this.Broadcast(playerID);
-			this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-            Console.WriteLine(clients.Count);
-		}
+            this.Broadcast(playerID);
+            this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
+        }
 
-		public void Broadcast(string message)
-		{
-			foreach (KeyValuePair<ServerClient,int> client in this.clients)
-			{
-				client.Key.Write(message);
-			}
-		}
-        public void SendToClient(string message, int clientID)
+        public void Broadcast(string message)
         {
-            foreach  (KeyValuePair<ServerClient, int> client in this.clients)
+            foreach (var client in this.clients)
             {
-                if (client.Value == clientID)
-                {
-                    client.Key.Write(message);
-                }
+                client.Write(message);
             }
         }
-	}
+    }
 }

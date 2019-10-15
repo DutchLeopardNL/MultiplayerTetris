@@ -47,7 +47,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            client.Write(chosenAttack + prefex);
+            this.client.Write($"{client.playerID}::{chosenAttack}");
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
@@ -58,7 +58,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            client.Write(chosenAttack + prefex);
+            this.client.Write($"{client.playerID}::{chosenAttack}");
         }
 
         private void ScissorButton_Click(object sender, RoutedEventArgs e)
@@ -70,7 +70,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            client.Write(chosenAttack + prefex);
+            this.client.Write($"{client.playerID}::{chosenAttack}");
         }
 
 

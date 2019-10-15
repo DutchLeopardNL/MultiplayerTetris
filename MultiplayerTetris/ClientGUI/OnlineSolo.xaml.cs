@@ -15,22 +15,28 @@ using System.Windows.Shapes;
 namespace ClientGUI
 {
     /// <summary>
-    /// Interaction logic for NameScreen.xaml
+    /// Interaction logic for OnlineSolo.xaml
     /// </summary>
-    public partial class NameScreen : Window
+    public partial class OnlineSolo : Window
     {
-       public string clientName { get; set; }
-        public NameScreen()
+        public OnlineSolo()
         {
             InitializeComponent();
         }
 
-        private void Confirm_Click(object sender, RoutedEventArgs e)
+     
+
+        private void Onlinebtn_Click(object sender, RoutedEventArgs e)
         {
-            OnlineSolo onlineSolo = new OnlineSolo();
-            clientName = clientNameChoice.Text;
-           
-            onlineSolo.Show();
+            MainWindow mainWindow = new MainWindow();
+            NameScreen nameScreen = new NameScreen();
+            mainWindow.Show();
+            mainWindow.ClientId = nameScreen.clientName;
+            this.Close();
+        }
+
+        private void Solobtn_Click(object sender, RoutedEventArgs e)
+        {
             this.Close();
         }
     }

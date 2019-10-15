@@ -15,23 +15,30 @@ using System.Windows.Shapes;
 namespace ClientGUI
 {
     /// <summary>
-    /// Interaction logic for NameScreen.xaml
+    /// Interaction logic for ChooseMode.xaml
     /// </summary>
-    public partial class NameScreen : Window
+    public partial class ChooseMode : Window
     {
-       public string clientName { get; set; }
-        public NameScreen()
+        private void Onlinebtn_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow mainWindow = new MainWindow();
+            mainWindow.Show();
+            this.Close();
+        }
+
+        private void Solobtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        public ChooseMode()
         {
             InitializeComponent();
         }
 
-        private void Confirm_Click(object sender, RoutedEventArgs e)
-        {
-            OnlineSolo onlineSolo = new OnlineSolo();
-            clientName = clientNameChoice.Text;
-           
-            onlineSolo.Show();
-            this.Close();
-        }
+       
+
+      
+
+     
     }
 }
