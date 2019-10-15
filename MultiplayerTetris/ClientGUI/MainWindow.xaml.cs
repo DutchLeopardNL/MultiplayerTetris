@@ -28,7 +28,7 @@ namespace ClientGUI
         public string ClientId { set; get; }
         public MainWindow()
         {
-            this.client = new Client();
+            this.client = new Client(this);
             //string ClientId;
             client.Connect("localhost", 10001);
 

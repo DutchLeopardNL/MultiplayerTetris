@@ -39,7 +39,6 @@ namespace ServerProject.Communication
         {
 			while (running)
 			{
-
 				if (attackchoice.Count == 2)
 				{
 					int result = onlinegame.PlayGame(attackchoice.Values.ElementAt(0), attackchoice.Values.ElementAt(1));
@@ -64,7 +63,7 @@ namespace ServerProject.Communication
         private void OnConnect(IAsyncResult ar)
         {
             TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
-            string playerID = this.clients.Count == 0 ? "player1" : "player2";
+            string playerID = this.clients.Count == 0 ? "player1" : "player2"; //Detemen if the connected client is player1 or player2
 
             this.clients.Add(new ServerClient(newClient, this));
             Console.WriteLine("A new client Connected");
@@ -79,5 +78,14 @@ namespace ServerProject.Communication
                 client.Write(message);
             }
         }
+
+		public void SaveScores()
+		{
+			foreach (var client in this.clients)
+			{
+				string hostName = client.hostName;
+				//TODO: Implement FileIO to read/write scores per hostname
+			}
+		}
     }
 }

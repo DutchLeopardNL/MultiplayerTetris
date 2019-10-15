@@ -11,6 +11,7 @@ namespace ServerProject.GameLogics
         // -1: player1 wins
         // 0: tie
         // 1: player2 wins
+		// 100% works
 
         public int PlayGame(Weapon wPlayer1, Weapon wPlayer2)
         {

@@ -13,13 +13,13 @@ namespace ServerProject.Communication
 	{
 		private TcpClient client;
 		private Server server;
-		private string hostName;
+		public string hostName { get; set; }
 		private NetworkStream stream;
 		private byte[] buffer;
         public string[] namechoice;
         private string weapon;
         private string name;
-		private static Object lockObject = new object();
+		private static object lockObject = new object();
 
 		public ServerClient(TcpClient client, Server server)
 		{

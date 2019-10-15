@@ -37,7 +37,7 @@
                 <ScaleTransform ScaleX="-1"></ScaleTransform>
             
             </Image.RenderTransform></Image>
-        <TextBox IsReadOnly="True" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="72" FontFamily="Bernard MT Condensed"></TextBox>
+        <TextBox x:Name="result" IsReadOnly="True" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="72" FontFamily="Bernard MT Condensed"></TextBox>
         <Image Grid.Row="1" Grid.Column="1" Margin="5" Name="Yourchoice" >
            
             </Image>
