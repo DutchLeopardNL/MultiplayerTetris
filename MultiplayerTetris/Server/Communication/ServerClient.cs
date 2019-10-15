@@ -57,16 +57,16 @@ namespace ServerProject.Communication
 		{
 			Console.WriteLine($"Received from {this.hostName}: {packet}");
 
-			if (packet.Contains("::::"))
+			if (packet.Contains("::"))
 			{
-				string[] nameAndAnswer = packet.Split(new[] { "::::" }, StringSplitOptions.None);
+				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
                 name = nameAndAnswer[0];
                 weapon = nameAndAnswer[1];
-                if(weapon == "Stone")
+                if(weapon == "Rock")
                 {
                     weaponchoice = GameLogics.Weapon.Rock;
                 }
-                else if(weapon == "Scissor")
+                else if(weapon == "Scissors")
                 {
                     weaponchoice = GameLogics.Weapon.Scissors;
                 }

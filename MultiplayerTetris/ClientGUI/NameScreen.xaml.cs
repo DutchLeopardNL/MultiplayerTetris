@@ -28,8 +28,7 @@ namespace ClientGUI
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
             OnlineSolo onlineSolo = new OnlineSolo();
-            clientName = clientNameChoice.Text;
-           
+            /*clientName = clientNameChoice.Text;*/
             onlineSolo.Show();
             this.Close();
         }

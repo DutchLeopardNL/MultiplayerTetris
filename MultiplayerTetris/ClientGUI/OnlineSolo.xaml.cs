@@ -29,9 +29,10 @@ namespace ClientGUI
         private void Onlinebtn_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
-            NameScreen nameScreen = new NameScreen();
+           
+           
             mainWindow.Show();
-            mainWindow.ClientId = nameScreen.clientName;
+            
             this.Close();
         }
 

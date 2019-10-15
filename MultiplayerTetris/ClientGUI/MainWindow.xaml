@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-       
+
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
@@ -25,7 +25,8 @@
             Close
         </Button>
         <Button x:Name="StoneButton" Grid.Row="0" Grid.Column="0" Margin="30" Click="StoneButton_Click" >
-            <Image Source="Resources/Steen.png"></Image> </Button>
+            <Image Source="Resources/Steen.png"></Image>
+        </Button>
         <Button x:Name="PaperButton" Grid.Row="1" Grid.Column="0" Margin="30" Click="PaperButton_Click">
             <Image Source="Resources/Papier.png"></Image>
         </Button>
@@ -35,11 +36,13 @@
         <Image Grid.Row="1" Grid.Column="2" Margin="5" Name="Opponentchoice" >
             <Image.RenderTransform>
                 <ScaleTransform ScaleX="-1"></ScaleTransform>
-            
-            </Image.RenderTransform></Image>
+
+            </Image.RenderTransform>
+        </Image>
         <TextBox IsReadOnly="True" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" FontSize="72" FontFamily="Bernard MT Condensed"></TextBox>
         <Image Grid.Row="1" Grid.Column="1" Margin="5" Name="Yourchoice" >
-           
-            </Image>
+
+        </Image>
+        <Label x:Name="namelbl" Content="Name: " HorizontalAlignment="Left" Margin="0,114,0,0" VerticalAlignment="Top" Grid.Row="2"/>
     </Grid>
 </Window>
