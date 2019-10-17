@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using Server.Data;
 
 namespace ClientGUI.Communication
 {
@@ -35,8 +36,8 @@ namespace ClientGUI.Communication
 
         private void OnRead(IAsyncResult ar)
         {
-            int bytesRead = this.stream.EndRead(ar);
-			string input = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+			int count = this.stream.EndRead(ar);
+			string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
 			string regex = "##";
 
@@ -106,7 +107,7 @@ namespace ClientGUI.Communication
         public void Write(string message)
         {
 			string regex = "##";
-			byte[] bytes = Encoding.ASCII.GetBytes($"{message}{regex}");
+			byte[] bytes = Encrypter.Encrypt($"{message}{regex}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
             this.stream.Flush();
         }

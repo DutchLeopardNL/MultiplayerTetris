@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using ServerProject.GameLogics;
+using Server.Data;
 
 namespace ServerProject.Communication
 {
@@ -36,8 +37,8 @@ namespace ServerProject.Communication
 
 		private void OnRead(IAsyncResult ar)
 		{
-			int bytesRead = this.stream.EndRead(ar);
-			string input = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+			int count = this.stream.EndRead(ar);
+			string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
 			string regex = "##";
 
@@ -76,7 +77,7 @@ namespace ServerProject.Communication
 		public void Write(string message)
 		{
 			string regex = "##";
-			byte[] bytes = Encoding.ASCII.GetBytes($"{message}{regex}");
+			byte[] bytes = Encrypter.Encrypt($"{message}{regex}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
 			this.stream.Flush();
 		}

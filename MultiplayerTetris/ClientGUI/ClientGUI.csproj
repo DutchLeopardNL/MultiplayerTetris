@@ -122,5 +122,11 @@
     <Resource Include="Resources\Schaar.png" />
     <Resource Include="Resources\Steen.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Server\ServerProject.csproj">
+      <Project>{278805EF-DC2C-461F-9C9D-84858645065F}</Project>
+      <Name>ServerProject</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
