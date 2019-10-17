@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ClientGUI.Communication;
 
 namespace ClientGUI
 {
@@ -19,19 +20,19 @@ namespace ClientGUI
     /// </summary>
     public partial class OnlineSolo : Window
     {
-        public OnlineSolo()
+		private Client client;
+        public OnlineSolo(Client client)
         {
+			this.client = client;
+
             InitializeComponent();
         }
 
-     
-
         private void Onlinebtn_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow mainWindow = new MainWindow();
-            NameScreen nameScreen = new NameScreen();
+            MainWindow mainWindow = new MainWindow(this.client);
             mainWindow.Show();
-            mainWindow.ClientId = nameScreen.clientName;
+
             this.Close();
         }
 

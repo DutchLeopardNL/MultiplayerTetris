@@ -15,12 +15,11 @@ namespace ClientGUI.Communication
         private NetworkStream stream;
         private byte[] buffer;
         private string totalBuffer;
-		private MainWindow mainWindow;
+		public MainWindow mainWindow { get; set; }
 		public string playerID { get; set; }
 
-        public Client(MainWindow mainWindow)
+        public Client()
         {
-			this.mainWindow = mainWindow;
 			this.playerID = null;
             this.client = new TcpClient();
             this.buffer = new byte[1024];

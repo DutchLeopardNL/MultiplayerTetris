@@ -13,22 +13,23 @@ namespace ServerProject.Communication
 {
     public class Server
     {
-        private TcpListener listener;
+		public static string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/RockPaperScissors";
+
+		private TcpListener listener;
         private SPSLogics onlinegame;
-		private List<PlayerScore> playerScores;
 		private bool running;
 		public List<ServerClient> clients { get; set; }
         public Dictionary<string, Weapon> attackchoice { get; set; }
+		public Dictionary<string, int> Score { get; set; }
 
         public Server(int port)
         {
 			this.onlinegame = new SPSLogics();
             this.listener = new TcpListener(IPAddress.Any, port);
             this.clients = new List<ServerClient>();
-            this.attackchoice = new Dictionary<string, GameLogics.Weapon>();
-			this.playerScores = new List<PlayerScore>();
+            this.attackchoice = new Dictionary<string, Weapon>();
 			this.running = true;
-        }
+		}
 
         public void Start()
         {
@@ -44,10 +45,10 @@ namespace ServerProject.Communication
 			{
                 if (this.attackchoice.Count == 2)
                 {
-                    int result = onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
+                    int result = this.onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
-					this.SaveScores();
+					this.SaveScores(result);
 					this.attackchoice.Clear();
 				}
 
@@ -69,7 +70,7 @@ namespace ServerProject.Communication
             TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
             string playerID = this.clients.Count == 0 ? "player1" : "player2"; //Determen if the connected client is player1 or player2
 
-            this.clients.Add(new ServerClient(newClient, this));
+            this.clients.Add(new ServerClient(newClient, this, playerID));
             Console.WriteLine("A new client Connected");
             this.Broadcast(playerID);
             this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
@@ -83,13 +84,24 @@ namespace ServerProject.Communication
             }
         }
 
-		public void SaveScores()
+		public void SaveScores(int result)
 		{
+			this.Score = FileIO.Read(path, "scores.txt");
+			
 			foreach (var client in this.clients)
 			{
-				string hostName = client.hostName;
-				//TODO: Implement FileIO to read/write scores per hostname
+				if (!this.Score.Keys.Contains(client.Name))
+				{
+					this.Score[client.Name] = 0;
+				}
+
+				if ((client.PlayerID == "player1" && result == -1) || (client.PlayerID == "player2" && result == 1))
+				{
+					this.Score[client.Name]++;
+				}
 			}
+
+			FileIO.Write(path, "scores.txt", this.Score);
 		}
 
     }

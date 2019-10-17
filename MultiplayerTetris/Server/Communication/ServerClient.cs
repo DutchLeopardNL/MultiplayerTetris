@@ -15,23 +15,22 @@ namespace ServerProject.Communication
 	{
 		private TcpClient client;
 		private Server server;
-		public string hostName { get; set; }
 		private NetworkStream stream;
 		private byte[] buffer;
-        public string[] namechoice;
         private string weapon;
         private string name;
 		private static object lockObject = new object();
+		public string Name { get; set; }
+		public string PlayerID { get; set; }
+		public int Wins { get; set; }
 
-		public ServerClient(TcpClient client, Server server)
+		public ServerClient(TcpClient client, Server server, string playerID)
 		{
 			this.client = client;
 			this.server = server;
 			this.stream = this.client.GetStream();
 			this.buffer = new byte[1024];
-
-			IPEndPoint iPEndPoint = (IPEndPoint)this.client.Client.RemoteEndPoint;
-			this.hostName = Dns.GetHostEntry(iPEndPoint.Address).HostName;
+			this.PlayerID = playerID;
 
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 		}
@@ -68,9 +67,9 @@ namespace ServerProject.Communication
 
 		public void HandlePacket(string packet)
 		{
-			Console.WriteLine($"Received from {this.hostName}: {packet}");
+			Console.WriteLine($"Received from client: {packet}");
 
-			if (packet.Contains("::"))
+			if (packet.Contains("player"))
 			{
 				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
                 name = nameAndAnswer[0];
@@ -83,6 +82,10 @@ namespace ServerProject.Communication
 
 				Console.WriteLine($"Name: {name} answered: {weapon}");
                 Console.WriteLine(server.attackchoice.Count);
+			}
+			else if (packet.Contains("name"))
+			{
+				this.Name = packet.Split(new[] { "::" }, StringSplitOptions.None)[1];
 			}
 		}
 

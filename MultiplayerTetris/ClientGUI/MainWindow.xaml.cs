@@ -23,14 +23,12 @@ namespace ClientGUI
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
-    {  
-        private Client client;
-        public string ClientId { set; get; }
-        public MainWindow()
+    {
+		private Client client;
+        public MainWindow(Client client)
         {
-            this.client = new Client(this);
-            //string ClientId;
-            client.Connect("localhost", 10001);
+			this.client = client;
+			this.client.mainWindow = this;
 
             InitializeComponent();
         }
@@ -119,8 +117,6 @@ namespace ClientGUI
             public const int SW_HIDE = 0;
             public const int SW_SHOW = 5;
         }
-
-     
 
         private void ResetGameButton_Click(object sender, RoutedEventArgs e)
         {
