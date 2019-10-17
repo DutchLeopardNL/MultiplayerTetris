@@ -43,7 +43,6 @@ namespace ClientGUI
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
             this.client.Write($"{client.playerID}::Rock");
-            RotateImage();
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {

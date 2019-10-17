@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Data
+namespace ServerProject.Data
 {
 	public static class Encrypter
 	{

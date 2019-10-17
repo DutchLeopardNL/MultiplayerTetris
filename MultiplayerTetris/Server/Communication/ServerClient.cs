@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using ServerProject.GameLogics;
-using Server.Data;
+using ServerProject.Data;
+using System.IO;
 
 namespace ServerProject.Communication
 {
@@ -37,21 +38,32 @@ namespace ServerProject.Communication
 
 		private void OnRead(IAsyncResult ar)
 		{
-			int count = this.stream.EndRead(ar);
-			string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
-
-			string regex = "##";
-
-			while (input.Contains(regex))
+			try
 			{
-				string packet = input.Substring(0, input.IndexOf(regex));
-				input = input.Substring(input.IndexOf(regex) + regex.Length);
-            
-                
-				this.HandlePacket(packet);
-			}
+				int count = this.stream.EndRead(ar);
+				string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
-			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+				string regex = "##";
+
+				while (input.Contains(regex))
+				{
+					string packet = input.Substring(0, input.IndexOf(regex));
+					input = input.Substring(input.IndexOf(regex) + regex.Length);
+
+
+					this.HandlePacket(packet);
+				}
+
+				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+			}
+			catch (IOException)
+			{
+				this.server.clients.Remove(this);
+				this.Disconnect();
+
+				Console.WriteLine("Client disconnected");
+			}
+			
 		}
 
 		public void HandlePacket(string packet)

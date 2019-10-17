@@ -15,10 +15,10 @@ namespace ServerProject.Communication
     {
         private TcpListener listener;
         private SPSLogics onlinegame;
-        private List<ServerClient> clients;
-        public Dictionary<string, GameLogics.Weapon> attackchoice { get; set; }
 		private List<PlayerScore> playerScores;
 		private bool running;
+		public List<ServerClient> clients { get; set; }
+        public Dictionary<string, Weapon> attackchoice { get; set; }
 
         public Server(int port)
         {
@@ -40,15 +40,15 @@ namespace ServerProject.Communication
         }
         private void Listen()
         {
-			while (running)
+			while (this.running)
 			{
-                if (attackchoice.Count == 2)
+                if (this.attackchoice.Count == 2)
                 {
                     int result = onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
 					this.SaveScores();
-					attackchoice.Clear();
+					this.attackchoice.Clear();
 				}
 
 				Thread.Sleep(1000);

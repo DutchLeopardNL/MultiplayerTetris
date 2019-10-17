@@ -11,8 +11,8 @@ namespace TestClient
 	{
 		static void Main(string[] args)
 		{
-			Client client = new Client();
-			client.Connect("localhost", 10001);
+			//Client client = new Client();
+			//client.Connect("localhost", 10001);
 
 			string input = "";
 			while (input != "stop")

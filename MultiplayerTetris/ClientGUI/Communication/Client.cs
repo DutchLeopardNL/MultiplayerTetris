@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
-using Server.Data;
+using ServerProject.Data;
+using System.IO;
 
 namespace ClientGUI.Communication
 {
@@ -29,27 +30,36 @@ namespace ClientGUI.Communication
         public void Connect(string host, int port)
         {
             this.client.Connect(host, port);
-			this.stream = client.GetStream();
+			this.stream = this.client.GetStream();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
         private void OnRead(IAsyncResult ar)
         {
-			int count = this.stream.EndRead(ar);
-			string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
-
-			string regex = "##";
-
-			while (input.Contains(regex))
+			try
 			{
-				string packet = input.Substring(0, input.IndexOf(regex));
-				input = input.Substring(input.IndexOf(regex) + regex.Length);
+				int count = this.stream.EndRead(ar);
+				string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
-				this.HandlePacket(packet);
+				string regex = "##";
+
+				while (input.Contains(regex))
+				{
+					string packet = input.Substring(0, input.IndexOf(regex));
+					input = input.Substring(input.IndexOf(regex) + regex.Length);
+
+					this.HandlePacket(packet);
+				}
+
+				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 			}
+			catch (IOException)
+			{
+				this.Disconnect();
 
-			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+				Console.WriteLine("Server shut down");
+			}
         }
 
 		public delegate void UpdateTextCallback(string message);
@@ -75,29 +85,24 @@ namespace ClientGUI.Communication
 					case -1:
 						if (this.playerID == "player1")
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
-                      
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
 						}
 						else
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
-                          
+							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
                         }
 						break;
 					case 0:
-						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!");
-                   
+						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
                         break;
 					case 1:
 						if (this.playerID == "player1")
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
-                       
                         }
 						else
 						{
 							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
-                        
                         }
 						break;
 				}
