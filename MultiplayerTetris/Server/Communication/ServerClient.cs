@@ -21,13 +21,16 @@ namespace ServerProject.Communication
         private string name;
 		private static object lockObject = new object();
 		public string Name { get; set; }
+		public string PlayerID { get; set; }
+		public int Wins { get; set; }
 
-		public ServerClient(TcpClient client, Server server)
+		public ServerClient(TcpClient client, Server server, string playerID)
 		{
 			this.client = client;
 			this.server = server;
 			this.stream = this.client.GetStream();
 			this.buffer = new byte[1024];
+			this.PlayerID = playerID;
 
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 		}
