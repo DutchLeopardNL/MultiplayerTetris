@@ -8,12 +8,12 @@ namespace ServerProject.Data
 {
 	public struct PlayerScore
 	{
-		public string HostName { get; set; }
+		public string Name { get; set; }
 		public int Score { get; set; }
 
-		public PlayerScore(string hostName, int score)
+		public PlayerScore(string name, int score)
 		{
-			this.HostName = hostName;
+			this.Name = name;
 			this.Score = score;
 		}
 

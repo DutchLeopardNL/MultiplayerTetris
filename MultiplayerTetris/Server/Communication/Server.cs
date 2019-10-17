@@ -87,7 +87,7 @@ namespace ServerProject.Communication
 		{
 			foreach (var client in this.clients)
 			{
-				string hostName = client.hostName;
+				string hostName = client.Name;
 				//TODO: Implement FileIO to read/write scores per hostname
 			}
 		}

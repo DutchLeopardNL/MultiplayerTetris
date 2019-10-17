@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClientGUI.Communication;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,16 +20,21 @@ namespace ClientGUI
     /// </summary>
     public partial class NameScreen : Window
     {
-       public string clientName { get; set; }
+		private Client client;
+
         public NameScreen()
         {
-            InitializeComponent();
+			this.client = new Client();
+			this.client.Connect("localhost", 10001);
+
+			InitializeComponent();
         }
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
-            OnlineSolo onlineSolo = new OnlineSolo();
-            clientName = clientNameChoice.Text;
+            OnlineSolo onlineSolo = new OnlineSolo(this.client);
+            string name = clientNameChoice.Text;
+			this.client.Write($"name::{name}");
            
             onlineSolo.Show();
             this.Close();
