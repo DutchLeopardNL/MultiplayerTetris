@@ -8,7 +8,6 @@
         Title="OnlineSolo" Height="450" Width="800">
     <Grid>
         <Button x:Name="Onlinebtn" Content="Online" HorizontalAlignment="Left" Margin="355,88,0,0" VerticalAlignment="Top" Width="75" Click="Onlinebtn_Click" ></Button>
-        <Button x:Name="Solobtn" Content="Solo" HorizontalAlignment="Left" Margin="355,196,0,0" VerticalAlignment="Top" Width="75" Click="Solobtn_Click"></Button>
 
     </Grid>
 </Window>
