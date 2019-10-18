@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using ClientGUI.Communication;
+using ServerProject.Communication;
+using ServerProject.Data;
 
 namespace ClientGUI
 {
@@ -26,6 +28,24 @@ namespace ClientGUI
 			this.client = client;
 
             InitializeComponent();
+
+			Dictionary<string, int> scores = FileIO.Read(Server.path, "scores.txt");
+
+			var ordered = scores.OrderBy(x => x.Value);
+
+			int counter = 0;
+			string result = "Top 5 wins:\n";
+			for (int i = ordered.Count() - 1; i >= 0; i--)
+			{
+				if (counter > 5) break;
+
+				var pair = ordered.ElementAt(i);
+				result += $"{pair.Key}:\t{pair.Value} wins\n";
+
+				counter++;
+			}
+
+			LeaderboardLabel.Content = result;
         }
 
         private void Onlinebtn_Click(object sender, RoutedEventArgs e)
@@ -35,7 +55,5 @@ namespace ClientGUI
 
             this.Close();
         }
-
-        
-    }
+	}
 }
