@@ -49,7 +49,6 @@ namespace ServerProject.Communication
 					string packet = input.Substring(0, input.IndexOf(regex));
 					input = input.Substring(input.IndexOf(regex) + regex.Length);
 
-
 					this.HandlePacket(packet);
 				}
 
