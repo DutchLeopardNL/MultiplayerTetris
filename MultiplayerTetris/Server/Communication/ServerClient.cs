@@ -1,19 +1,19 @@
-﻿using System;
-using System.Net.Sockets;
+﻿using ServerProject.Data;
 using ServerProject.GameLogics;
-using ServerProject.Data;
+using System;
 using System.IO;
+using System.Net.Sockets;
 
 namespace ServerProject.Communication
 {
 	public class ServerClient
 	{
-		private TcpClient client;
-		private Server server;
-		private NetworkStream stream;
-		private byte[] buffer;
-		private string eof;
-		private static object lockObject = new object();
+		private readonly TcpClient client;
+		private readonly Server server;
+		private readonly NetworkStream stream;
+		private readonly byte[] buffer;
+		private readonly string eof;
+		private static readonly object lockObject = new object();
 		public string Name { get; set; }
 		public string PlayerID { get; set; }
 
@@ -26,7 +26,7 @@ namespace ServerProject.Communication
 			this.eof = "##";
 			this.PlayerID = playerID;
 
-			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(this.OnRead), null);
 		}
 
 		/// <summary>
@@ -51,7 +51,7 @@ namespace ServerProject.Communication
 					this.HandlePacket(packet);
 				}
 
-				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(this.OnRead), null);
 			}
 			catch (IOException)
 			{
@@ -60,7 +60,7 @@ namespace ServerProject.Communication
 
 				Console.WriteLine("Client disconnected");
 			}
-			
+
 		}
 
 		/// <summary>
@@ -74,8 +74,8 @@ namespace ServerProject.Communication
 			if (packet.Contains("player"))
 			{
 				string[] nameAndWeapon = packet.Split(new[] { "::" }, StringSplitOptions.None);
-                string name = nameAndWeapon[0];
-                string weapon = nameAndWeapon[1];
+				string name = nameAndWeapon[0];
+				string weapon = nameAndWeapon[1];
 
 				lock (lockObject)
 				{
@@ -83,7 +83,7 @@ namespace ServerProject.Communication
 				}
 
 				Console.WriteLine($"Name: {name} answered: {weapon}");
-                Console.WriteLine(this.server.Attackchoice.Count);
+				Console.WriteLine(this.server.Attackchoice.Count);
 			}
 			else if (packet.Contains("name"))
 			{

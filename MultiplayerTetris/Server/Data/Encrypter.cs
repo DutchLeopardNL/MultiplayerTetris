@@ -7,7 +7,7 @@ namespace ServerProject.Data
 {
 	public static class Encrypter
 	{
-		private static byte[] IV = { 187, 165, 69, 255, 230, 174, 56, 74, 46, 87, 255, 203, 93, 21, 168, 114 };
+		private static readonly byte[] IV = { 187, 165, 69, 255, 230, 174, 56, 74, 46, 87, 255, 203, 93, 21, 168, 114 };
 
 		/// <summary>
 		/// Encrypt text given a key.

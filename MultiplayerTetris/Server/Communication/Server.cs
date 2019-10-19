@@ -1,28 +1,28 @@
-﻿using System;
+﻿using ServerProject.Data;
+using ServerProject.GameLogics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using ServerProject.GameLogics;
-using ServerProject.Data;
 using System.Threading;
 
 namespace ServerProject.Communication
 {
-    public class Server
-    {
+	public class Server
+	{
 		public static string path = $"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/RockPaperScissors";
 
-		private TcpListener listener;
-        private SPSLogics onlinegame;
+		private readonly TcpListener listener;
+		private readonly SPSLogics onlinegame;
 		private bool running;
 		public List<ServerClient> Clients { get; set; }
-        public Dictionary<string, Weapon> Attackchoice { get; set; }
+		public Dictionary<string, Weapon> Attackchoice { get; set; }
 		public Dictionary<string, int> Score { get; set; }
 
-        public Server(int port)
-        {
-            this.listener = new TcpListener(IPAddress.Any, port);
+		public Server(int port)
+		{
+			this.listener = new TcpListener(IPAddress.Any, port);
 			this.onlinegame = new SPSLogics();
 			this.running = true;
 			this.Clients = new List<ServerClient>();
@@ -32,21 +32,21 @@ namespace ServerProject.Communication
 		/// <summary>
 		/// Starts the server
 		/// </summary>
-        public void Start()
-        {
-            this.listener.Start();
-            this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-            Console.WriteLine("Server started listening....");
+		public void Start()
+		{
+			this.listener.Start();
+			this.listener.BeginAcceptTcpClient(new AsyncCallback(this.OnConnect), null);
+			Console.WriteLine("Server started listening....");
 
-			new Thread(new ThreadStart(Listen)).Start();
-        }
+			new Thread(new ThreadStart(this.Listen)).Start();
+		}
 
 		/// <summary>
 		/// Disconnects all the connected clients and stops the server.
 		/// </summary>
 		public void Stop()
 		{
-			foreach (var client in this.Clients)
+			foreach (ServerClient client in this.Clients)
 			{
 				client.Disconnect();
 			}
@@ -59,12 +59,12 @@ namespace ServerProject.Communication
 		/// It also handles the result of this game.
 		/// </summary>
 		private void Listen()
-        {
+		{
 			while (this.running)
 			{
-                if (this.Attackchoice.Count == 2)
-                {
-                    int result = this.onlinegame.PlayGame(Attackchoice["player1"], Attackchoice["player2"]);
+				if (this.Attackchoice.Count == 2)
+				{
+					int result = this.onlinegame.PlayGame(this.Attackchoice["player1"], this.Attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
 					this.SaveScores(result);
@@ -73,14 +73,14 @@ namespace ServerProject.Communication
 
 				Thread.Sleep(1000);
 			}
-        }
+		}
 
 		/// <summary>
 		/// This method is the callback from the BeginAcceptTcpClient method.
 		/// </summary>
 		/// <param name="ar"></param>
-        private void OnConnect(IAsyncResult ar)
-		{ 
+		private void OnConnect(IAsyncResult ar)
+		{
 			if (this.Clients.Count < 2)
 			{
 				TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
@@ -90,21 +90,21 @@ namespace ServerProject.Communication
 				Console.WriteLine("A new client Connected");
 				this.Broadcast(playerID);
 			}
-            
-            this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
-        }
+
+			this.listener.BeginAcceptTcpClient(new AsyncCallback(this.OnConnect), null);
+		}
 
 		/// <summary>
 		/// Send a message to all clients connected.
 		/// </summary>
 		/// <param name="message"></param>
-        public void Broadcast(string message)
-        {
-            foreach (var client in this.Clients)
-            {
-                client.Write(message);
-            }
-        }
+		public void Broadcast(string message)
+		{
+			foreach (ServerClient client in this.Clients)
+			{
+				client.Write(message);
+			}
+		}
 
 		/// <summary>
 		/// Save the this.Scores dictionary. The total wins are stored within this dictionary. 
@@ -114,8 +114,8 @@ namespace ServerProject.Communication
 		private void SaveScores(int result)
 		{
 			this.Score = FileIO.Read(path, "scores.txt");
-			
-			foreach (var client in this.Clients)
+
+			foreach (ServerClient client in this.Clients)
 			{
 				if (!this.Score.Keys.Contains(client.Name))
 				{
@@ -131,5 +131,5 @@ namespace ServerProject.Communication
 			FileIO.Write(path, "scores.txt", this.Score);
 		}
 
-    }
+	}
 }

@@ -1,24 +1,24 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Net.Sockets;
-using ServerProject.Data;
+﻿using ServerProject.Data;
+using System;
 using System.IO;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 
 namespace ClientGUI.Communication
 {
-    public class Client
-    {
-        private TcpClient client;
-        private NetworkStream stream;
-        private byte[] buffer;
-		private string eof;
+	public class Client
+	{
+		private readonly TcpClient client;
+		private NetworkStream stream;
+		private readonly byte[] buffer;
+		private readonly string eof;
 		public MainWindow MainWindow { get; set; }
 		public string PlayerID { get; set; }
 
-        public Client()
-        {
-            this.client = new TcpClient();
-            this.buffer = new byte[1024];
+		public Client()
+		{
+			this.client = new TcpClient();
+			this.buffer = new byte[1024];
 			this.eof = "##";
 			this.PlayerID = null;
 		}
@@ -29,20 +29,20 @@ namespace ClientGUI.Communication
 		/// <param name="host"></param>
 		/// <param name="port"></param>
 		/// <returns></returns>
-        public async Task Connect(string host, int port)
-        {
-            await this.client.ConnectAsync(host, port);
+		public async Task Connect(string host, int port)
+		{
+			await this.client.ConnectAsync(host, port);
 			this.stream = this.client.GetStream();
 
-            this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
-        }
+			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(this.OnRead), null);
+		}
 
 		/// <summary>
 		/// This method is the callback from the BeginRead method.
 		/// </summary>
 		/// <param name="ar"></param>
-        private void OnRead(IAsyncResult ar)
-        {
+		private void OnRead(IAsyncResult ar)
+		{
 			try
 			{
 				int count = this.stream.EndRead(ar);
@@ -56,14 +56,14 @@ namespace ClientGUI.Communication
 					this.HandlePacket(packet);
 				}
 
-				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
+				this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(this.OnRead), null);
 			}
 			catch (IOException)
 			{
 				this.Disconnect();
 				Console.WriteLine("Server shut down");
 			}
-        }
+		}
 
 		/// <summary>
 		/// Delegate to update the UI.
@@ -85,7 +85,7 @@ namespace ClientGUI.Communication
 		/// </summary>
 		/// <param name="packet"></param>
 		public void HandlePacket(string packet)
-        {
+		{
 			Console.WriteLine($"Server send: {packet}");
 
 			if (packet.Contains("player") && this.PlayerID == null)
@@ -100,48 +100,48 @@ namespace ClientGUI.Communication
 					case -1:
 						if (this.PlayerID == "player1")
 						{
-							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), "You won!");
 						}
 						else
 						{
-							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
-                        }
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), "You lost.");
+						}
 						break;
 					case 0:
-						this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
-                        break;
+						this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), "Tie!");
+						break;
 					case 1:
 						if (this.PlayerID == "player1")
 						{
-							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
-                        }
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), "You lost.");
+						}
 						else
 						{
-							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
-                        }
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(this.UpdateText), "You won!");
+						}
 						break;
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Writes to the server.
 		/// </summary>
 		/// <param name="message"></param>
-        public void Write(string message)
-        {
+		public void Write(string message)
+		{
 			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
-            this.stream.Flush();
-        }
+			this.stream.Flush();
+		}
 
 		/// <summary>
 		/// Disconnect the communication
 		/// </summary>
-        public void Disconnect()
-        {
-            this.stream.Close();
-            this.client.Close();
-        }
-    }
+		public void Disconnect()
+		{
+			this.stream.Close();
+			this.client.Close();
+		}
+	}
 }

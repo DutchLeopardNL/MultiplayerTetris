@@ -1,126 +1,120 @@
 ﻿using ClientGUI.Communication;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 
 namespace ClientGUI
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-		private Client client;
-        public MainWindow(Client client)
-        {
+	/// <summary>
+	/// Interaction logic for MainWindow.xaml
+	/// </summary>
+	public partial class MainWindow : Window
+	{
+		private readonly Client client;
+		public MainWindow(Client client)
+		{
 			this.client = client;
 			this.client.MainWindow = this;
 
-            InitializeComponent();
-        }
+			this.InitializeComponent();
+		}
 
-        private void StoneButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
-            StoneButton.Click -= StoneButton_Click;
-            PaperButton.Click -= PaperButton_Click;
-            ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.PlayerID}::Rock");
-        }
-        private void PaperButton_Click(object sender, RoutedEventArgs e)
-        {
-            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
-            StoneButton.Click -= StoneButton_Click;
-            PaperButton.Click -= PaperButton_Click;
-            ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.PlayerID}::Paper");
-        }
+		private void StoneButton_Click(object sender, RoutedEventArgs e)
+		{
 
-        private void ScissorButton_Click(object sender, RoutedEventArgs e)
-        {
-            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
-            StoneButton.Click -= StoneButton_Click;
-            PaperButton.Click -= PaperButton_Click;
-            ScissorButton.Click -= ScissorButton_Click;
-           
-            this.client.Write($"{client.PlayerID}::Scissors");
-        }
-        public void ResetGame()
-        {
-            result.Text = "";
-            StoneButton.Click += StoneButton_Click;
-            PaperButton.Click += PaperButton_Click;
-            ScissorButton.Click += ScissorButton_Click;
-            Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Blank.png", UriKind.Relative));
-        }
+			this.Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Steen.png", UriKind.Relative));
+			this.StoneButton.Click -= this.StoneButton_Click;
+			this.PaperButton.Click -= this.PaperButton_Click;
+			this.ScissorButton.Click -= this.ScissorButton_Click;
+			this.client.Write($"{this.client.PlayerID}::Rock");
+		}
+		private void PaperButton_Click(object sender, RoutedEventArgs e)
+		{
+			this.Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Papier.png", UriKind.Relative));
+			this.StoneButton.Click -= this.StoneButton_Click;
+			this.PaperButton.Click -= this.PaperButton_Click;
+			this.ScissorButton.Click -= this.ScissorButton_Click;
+			this.client.Write($"{this.client.PlayerID}::Paper");
+		}
+
+		private void ScissorButton_Click(object sender, RoutedEventArgs e)
+		{
+			this.Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Schaar.png", UriKind.Relative));
+			this.StoneButton.Click -= this.StoneButton_Click;
+			this.PaperButton.Click -= this.PaperButton_Click;
+			this.ScissorButton.Click -= this.ScissorButton_Click;
+
+			this.client.Write($"{this.client.PlayerID}::Scissors");
+		}
+		public void ResetGame()
+		{
+			this.result.Text = "";
+			this.StoneButton.Click += this.StoneButton_Click;
+			this.PaperButton.Click += this.PaperButton_Click;
+			this.ScissorButton.Click += this.ScissorButton_Click;
+			this.Yourchoice.Source = new BitmapImage(new Uri(@"Resources\Blank.png", UriKind.Relative));
+		}
 
 
-        private void RotateImage()
-        {
-            Timer timer = new Timer();
-            timer.Interval = 3;
-            int timesRotated = 0;
-            int currentAngle = 0;
-            timer.Elapsed += (x, y) =>
-            {
-                if (timesRotated == 5000)
-                {
-                    timer.Stop();
-                    return;
-                }
+		private void RotateImage()
+		{
+			Timer timer = new Timer
+			{
+				Interval = 3
+			};
+			int timesRotated = 0;
+			int currentAngle = 0;
+			timer.Elapsed += (x, y) =>
+			{
+				if (timesRotated == 5000)
+				{
+					timer.Stop();
+					return;
+				}
 
-                currentAngle += 10;
-                if (currentAngle == 360)
-                {
-                    currentAngle = 0;
-                    timesRotated++;
-                }
+				currentAngle += 10;
+				if (currentAngle == 360)
+				{
+					currentAngle = 0;
+					timesRotated++;
+				}
 
-                Dispatcher.Invoke(() =>
-                {
-                    RotateTransform transform = new RotateTransform();
-                    transform.CenterX = 150;
-                    transform.CenterY = 150;
-                    transform.Angle = currentAngle;
-                    if (currentAngle == 130)
-                    {
-                        this.Top += 5;
-                    }
-                    Yourchoice.RenderTransform = transform;
-                });
-            };
-            timer.Start();
-        }
-        static class NativeMethods
-        {
-            [DllImport("Kernel32.dll")]
-            public static extern void AllocConsole();
+				this.Dispatcher.Invoke(() =>
+				{
+					RotateTransform transform = new RotateTransform
+					{
+						CenterX = 150,
+						CenterY = 150,
+						Angle = currentAngle
+					};
+					if (currentAngle == 130)
+					{
+						this.Top += 5;
+					}
+					this.Yourchoice.RenderTransform = transform;
+				});
+			};
+			timer.Start();
+		}
 
-            [DllImport("Kernel32")]
-            public static extern void FreeConsole();
+		private static class NativeMethods
+		{
+			[DllImport("Kernel32.dll")]
+			public static extern void AllocConsole();
 
-            public const int SW_HIDE = 0;
-            public const int SW_SHOW = 5;
-        }
+			[DllImport("Kernel32")]
+			public static extern void FreeConsole();
 
-        private void ResetGameButton_Click(object sender, RoutedEventArgs e)
-        {
-            ResetGame();
-        }
-    } }
- 
+			public const int SW_HIDE = 0;
+			public const int SW_SHOW = 5;
+		}
+
+		private void ResetGameButton_Click(object sender, RoutedEventArgs e)
+		{
+			this.ResetGame();
+		}
+	}
+}

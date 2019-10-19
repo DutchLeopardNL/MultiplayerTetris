@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
 
 namespace ServerProject.Data
@@ -19,7 +19,7 @@ namespace ServerProject.Data
 			{
 				using (Stream stream = File.Open($"{path}/{file}", FileMode.Open))
 				{
-					var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+					System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 					return (Dictionary<string, int>)binaryFormatter.Deserialize(stream);
 				}
 			}
@@ -50,7 +50,7 @@ namespace ServerProject.Data
 		{
 			using (Stream stream = File.Open($"{path}/{file}", FileMode.Create))
 			{
-				var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+				System.Runtime.Serialization.Formatters.Binary.BinaryFormatter binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
 				binaryFormatter.Serialize(stream, objectToWrite);
 			}
 		}

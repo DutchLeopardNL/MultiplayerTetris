@@ -1,12 +1,12 @@
-using System;
 using ServerProject.Communication;
+using System;
 
 
 namespace ServerProject
 {
-	class Program
+	internal class Program
 	{
-		static void Main(string[] args)
+		private static void Main(string[] args)
 		{
 			Server server = new Server(10001);
 			server.Start();
