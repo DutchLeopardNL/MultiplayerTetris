@@ -23,7 +23,7 @@ namespace ClientGUI
 
 			IOrderedEnumerable<KeyValuePair<string, int>> ordered = scores.OrderBy(x => x.Value);
 
-			int counter = 0;
+			int counter = 1;
 			string result = "Top 5 wins:\n";
 			for (int i = ordered.Count() - 1; i >= 0; i--)
 			{
