@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using ServerProject.Data;
@@ -14,18 +11,24 @@ namespace ClientGUI.Communication
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer;
-        private string totalBuffer;
-		public MainWindow mainWindow { get; set; }
-		public string playerID { get; set; }
+		private string eof;
+		public MainWindow MainWindow { get; set; }
+		public string PlayerID { get; set; }
 
         public Client()
         {
-			this.playerID = null;
             this.client = new TcpClient();
             this.buffer = new byte[1024];
-            this.totalBuffer = string.Empty;
+			this.eof = "##";
+			this.PlayerID = null;
 		}
 
+		/// <summary>
+		/// Connect to the server.
+		/// </summary>
+		/// <param name="host"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
         public async Task Connect(string host, int port)
         {
             await this.client.ConnectAsync(host, port);
@@ -34,6 +37,10 @@ namespace ClientGUI.Communication
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
+		/// <summary>
+		/// This method is the callback from the BeginRead method.
+		/// </summary>
+		/// <param name="ar"></param>
         private void OnRead(IAsyncResult ar)
         {
 			try
@@ -41,12 +48,10 @@ namespace ClientGUI.Communication
 				int count = this.stream.EndRead(ar);
 				string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
-				string regex = "##";
-
-				while (input.Contains(regex))
+				while (input.Contains(this.eof))
 				{
-					string packet = input.Substring(0, input.IndexOf(regex));
-					input = input.Substring(input.IndexOf(regex) + regex.Length);
+					string packet = input.Substring(0, input.IndexOf(this.eof));
+					input = input.Substring(input.IndexOf(this.eof) + this.eof.Length);
 
 					this.HandlePacket(packet);
 				}
@@ -56,25 +61,36 @@ namespace ClientGUI.Communication
 			catch (IOException)
 			{
 				this.Disconnect();
-
 				Console.WriteLine("Server shut down");
 			}
         }
 
+		/// <summary>
+		/// Delegate to update the UI.
+		/// </summary>
+		/// <param name="message"></param>
 		public delegate void UpdateTextCallback(string message);
 
+		/// <summary>
+		/// Method to update the UI.
+		/// </summary>
+		/// <param name="message"></param>
 		private void UpdateText(string message)
 		{
-			this.mainWindow.result.Text = (message + "\n");
+			this.MainWindow.result.Text = (message + "\n");
 		}
 
+		/// <summary>
+		/// Decodes the packet received from the server.
+		/// </summary>
+		/// <param name="packet"></param>
 		public void HandlePacket(string packet)
         {
 			Console.WriteLine($"Server send: {packet}");
 
-			if (packet.Contains("player") && this.playerID == null)
+			if (packet.Contains("player") && this.PlayerID == null)
 			{
-				this.playerID = packet;
+				this.PlayerID = packet;
 			}
 			else if (packet.Contains("result"))
 			{
@@ -82,40 +98,46 @@ namespace ClientGUI.Communication
 				switch (winLoseTie)
 				{
 					case -1:
-						if (this.playerID == "player1")
+						if (this.PlayerID == "player1")
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
 						}
 						else
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
                         }
 						break;
 					case 0:
-						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
+						this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
                         break;
 					case 1:
-						if (this.playerID == "player1")
+						if (this.PlayerID == "player1")
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
                         }
 						else
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
                         }
 						break;
 				}
 			}
         }
 
+		/// <summary>
+		/// Writes to the server.
+		/// </summary>
+		/// <param name="message"></param>
         public void Write(string message)
         {
-			string regex = "##";
-			byte[] bytes = Encrypter.Encrypt($"{message}{regex}", "password123");
+			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
             this.stream.Flush();
         }
 
+		/// <summary>
+		/// Disconnect the communication
+		/// </summary>
         public void Disconnect()
         {
             this.stream.Close();

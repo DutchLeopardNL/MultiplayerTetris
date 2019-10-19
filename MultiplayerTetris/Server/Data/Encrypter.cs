@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ServerProject.Data
 {
@@ -12,6 +9,12 @@ namespace ServerProject.Data
 	{
 		private static byte[] IV = { 187, 165, 69, 255, 230, 174, 56, 74, 46, 87, 255, 203, 93, 21, 168, 114 };
 
+		/// <summary>
+		/// Encrypt text given a key.
+		/// </summary>
+		/// <param name="plainText"></param>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public static byte[] Encrypt(string plainText, string key)
 		{
 			byte[] encrypted;
@@ -35,6 +38,12 @@ namespace ServerProject.Data
 			return encrypted;
 		}
 
+		/// <summary>
+		/// Decrypt a byte array given a key.
+		/// </summary>
+		/// <param name="cipherText"></param>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		public static string Decrypt(byte[] cipherText, string key)
 		{
 			string plaintext = null;
@@ -58,6 +67,11 @@ namespace ServerProject.Data
 			return plaintext;
 		}
 
+		/// <summary>
+		/// Get a 32 byte array which contains a custom key.
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
 		private static byte[] GetKeyBytes(string key)
 		{
 			byte[] result = new byte[32];
@@ -71,6 +85,14 @@ namespace ServerProject.Data
 			return result;
 		}
 
+		/// <summary>
+		/// Custom array SubArray method.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="data"></param>
+		/// <param name="index"></param>
+		/// <param name="length"></param>
+		/// <returns></returns>
 		public static T[] SubArray<T>(this T[] data, int index, int length)
 		{
 			T[] result = new T[length];

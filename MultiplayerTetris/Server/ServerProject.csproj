@@ -47,7 +47,6 @@
     <Compile Include="Communication\ServerClient.cs" />
     <Compile Include="Data\Encrypter.cs" />
     <Compile Include="Data\FileIO.cs" />
-    <Compile Include="GameLogics\BotLogics.cs" />
     <Compile Include="GameLogics\SPSLogics.cs" />
     <Compile Include="GameLogics\Weapon.cs" />
     <Compile Include="Program.cs" />

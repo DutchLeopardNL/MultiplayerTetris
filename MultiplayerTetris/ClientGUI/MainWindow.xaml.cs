@@ -28,7 +28,7 @@ namespace ClientGUI
         public MainWindow(Client client)
         {
 			this.client = client;
-			this.client.mainWindow = this;
+			this.client.MainWindow = this;
 
             InitializeComponent();
         }
@@ -40,7 +40,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.playerID}::Rock");
+            this.client.Write($"{client.PlayerID}::Rock");
         }
         private void PaperButton_Click(object sender, RoutedEventArgs e)
         {
@@ -48,7 +48,7 @@ namespace ClientGUI
             StoneButton.Click -= StoneButton_Click;
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
-            this.client.Write($"{client.playerID}::Paper");
+            this.client.Write($"{client.PlayerID}::Paper");
         }
 
         private void ScissorButton_Click(object sender, RoutedEventArgs e)
@@ -58,7 +58,7 @@ namespace ClientGUI
             PaperButton.Click -= PaperButton_Click;
             ScissorButton.Click -= ScissorButton_Click;
            
-            this.client.Write($"{client.playerID}::Scissors");
+            this.client.Write($"{client.PlayerID}::Scissors");
         }
         public void ResetGame()
         {
