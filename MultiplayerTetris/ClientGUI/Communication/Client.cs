@@ -26,9 +26,9 @@ namespace ClientGUI.Communication
             this.totalBuffer = string.Empty;
 		}
 
-        public void Connect(string host, int port)
+        public async Task Connect(string host, int port)
         {
-            this.client.Connect(host, port);
+            await this.client.ConnectAsync(host, port);
 			this.stream = this.client.GetStream();
 
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
