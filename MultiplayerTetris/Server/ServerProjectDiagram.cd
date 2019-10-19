@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ServerProject.Communication.Server">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABACCAEEgAACACAAAAAIgECAAAIAAAAAAAAAA=</HashCode>
+      <FileName>Communication\Server.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerProject.Communication.ServerClient">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAQAAAEgAQgAAAAAAAACEBABAEAAAI=</HashCode>
+      <FileName>Communication\ServerClient.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerProject.Data.Encrypter">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAgAAAAAAAAQAAAAAAAAAAAAAAAAAAgAAAAAAAI=</HashCode>
+      <FileName>Data\Encrypter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerProject.Data.FileIO">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Data\FileIO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerProject.GameLogics.SPSLogics">
+    <Position X="6.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GameLogics\SPSLogics.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ServerProject.Program">
+    <Position X="6.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="ServerProject.GameLogics.Weapon">
+    <Position X="1.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>GameLogics\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
