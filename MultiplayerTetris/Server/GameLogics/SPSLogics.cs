@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServerProject.GameLogics
+﻿namespace ServerProject.GameLogics
 {
-    public class SPSLogics
+	public class SPSLogics
     {
         // -1: player1 wins
         // 0: tie
         // 1: player2 wins
 
+		/// <summary>
+		/// The game logics
+		/// </summary>
+		/// <param name="wPlayer1"></param>
+		/// <param name="wPlayer2"></param>
+		/// <returns></returns>
         public int PlayGame(Weapon wPlayer1, Weapon wPlayer2)
         {
             if (wPlayer1 == Weapon.Rock)

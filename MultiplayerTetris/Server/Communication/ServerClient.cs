@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Sockets;
-using System.Net;
 using ServerProject.GameLogics;
 using ServerProject.Data;
 using System.IO;
@@ -34,6 +29,11 @@ namespace ServerProject.Communication
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
 		}
 
+		/// <summary>
+		/// This method is the callback from the BeginRead method.
+		/// When the stream closes, the object is being removed.
+		/// </summary>
+		/// <param name="ar"></param>
 		private void OnRead(IAsyncResult ar)
 		{
 			try
@@ -63,6 +63,10 @@ namespace ServerProject.Communication
 			
 		}
 
+		/// <summary>
+		/// Decodes a packet coming from the client.
+		/// </summary>
+		/// <param name="packet"></param>
 		public void HandlePacket(string packet)
 		{
 			Console.WriteLine($"Received from client: {packet}");
@@ -87,6 +91,10 @@ namespace ServerProject.Communication
 			}
 		}
 
+		/// <summary>
+		/// Write to the client.
+		/// </summary>
+		/// <param name="message"></param>
 		public void Write(string message)
 		{
 			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
@@ -94,6 +102,9 @@ namespace ServerProject.Communication
 			this.stream.Flush();
 		}
 
+		/// <summary>
+		/// Disconnects the communication
+		/// </summary>
 		public void Disconnect()
 		{
 			this.stream.Close();

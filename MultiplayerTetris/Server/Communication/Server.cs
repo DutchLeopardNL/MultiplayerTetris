@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 using ServerProject.GameLogics;
@@ -31,6 +29,9 @@ namespace ServerProject.Communication
 			this.Attackchoice = new Dictionary<string, Weapon>();
 		}
 
+		/// <summary>
+		/// Starts the server
+		/// </summary>
         public void Start()
         {
             this.listener.Start();
@@ -40,7 +41,24 @@ namespace ServerProject.Communication
 			new Thread(new ThreadStart(Listen)).Start();
         }
 
-        private void Listen()
+		/// <summary>
+		/// Disconnects all the connected clients and stops the server.
+		/// </summary>
+		public void Stop()
+		{
+			foreach (var client in this.Clients)
+			{
+				client.Disconnect();
+			}
+			this.running = false;
+			this.listener.Stop();
+		}
+
+		/// <summary>
+		/// This method is running in an other thread. It is checkin if their is a game played. 
+		/// It also handles the result of this game.
+		/// </summary>
+		private void Listen()
         {
 			while (this.running)
 			{
@@ -57,22 +75,17 @@ namespace ServerProject.Communication
 			}
         }
 
-        public void Stop()
-        {
-            foreach (var client in this.Clients)
-            {
-                client.Disconnect();
-            }
-            this.listener.Stop();
-        }
-
+		/// <summary>
+		/// This method is the callback from the BeginAcceptTcpClient method.
+		/// </summary>
+		/// <param name="ar"></param>
         private void OnConnect(IAsyncResult ar)
 		{ 
 			if (this.Clients.Count < 2)
 			{
 				TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
 
-				string playerID = this.Clients.Count == 0 ? "player1" : "player2"; //Determen if the connected client is player1 or player2
+				string playerID = this.Clients.Count == 0 ? "player1" : "player2";
 				this.Clients.Add(new ServerClient(newClient, this, playerID));
 				Console.WriteLine("A new client Connected");
 				this.Broadcast(playerID);
@@ -81,6 +94,10 @@ namespace ServerProject.Communication
             this.listener.BeginAcceptTcpClient(new AsyncCallback(OnConnect), null);
         }
 
+		/// <summary>
+		/// Send a message to all clients connected.
+		/// </summary>
+		/// <param name="message"></param>
         public void Broadcast(string message)
         {
             foreach (var client in this.Clients)
@@ -89,7 +106,12 @@ namespace ServerProject.Communication
             }
         }
 
-		public void SaveScores(int result)
+		/// <summary>
+		/// Save the this.Scores dictionary. The total wins are stored within this dictionary. 
+		/// This object is written to your own documents.
+		/// </summary>
+		/// <param name="result"></param>
+		private void SaveScores(int result)
 		{
 			this.Score = FileIO.Read(path, "scores.txt");
 			

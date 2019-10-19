@@ -1,15 +1,18 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Serialization;
 
 namespace ServerProject.Data
 {
 	public class FileIO
 	{
+		/// <summary>
+		/// Read a file.
+		/// If the file does not exist, it is being created.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="file"></param>
+		/// <returns></returns>
 		public static Dictionary<string, int> Read(string path, string file)
 		{
 			try
@@ -36,6 +39,13 @@ namespace ServerProject.Data
 			}
 		}
 
+
+		/// <summary>
+		/// Write to a file.
+		/// </summary>
+		/// <param name="path"></param>
+		/// <param name="file"></param>
+		/// <param name="objectToWrite"></param>
 		public static void Write(string path, string file, Dictionary<string, int> objectToWrite)
 		{
 			using (Stream stream = File.Open($"{path}/{file}", FileMode.Create))

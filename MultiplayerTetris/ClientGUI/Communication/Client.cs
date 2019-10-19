@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using ServerProject.Data;
@@ -26,6 +23,12 @@ namespace ClientGUI.Communication
 			this.PlayerID = null;
 		}
 
+		/// <summary>
+		/// Connect to the server.
+		/// </summary>
+		/// <param name="host"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
         public async Task Connect(string host, int port)
         {
             await this.client.ConnectAsync(host, port);
@@ -34,6 +37,10 @@ namespace ClientGUI.Communication
             this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
         }
 
+		/// <summary>
+		/// This method is the callback from the BeginRead method.
+		/// </summary>
+		/// <param name="ar"></param>
         private void OnRead(IAsyncResult ar)
         {
 			try
@@ -58,13 +65,25 @@ namespace ClientGUI.Communication
 			}
         }
 
+		/// <summary>
+		/// Delegate to update the UI.
+		/// </summary>
+		/// <param name="message"></param>
 		public delegate void UpdateTextCallback(string message);
 
+		/// <summary>
+		/// Method to update the UI.
+		/// </summary>
+		/// <param name="message"></param>
 		private void UpdateText(string message)
 		{
 			this.MainWindow.result.Text = (message + "\n");
 		}
 
+		/// <summary>
+		/// Decodes the packet received from the server.
+		/// </summary>
+		/// <param name="packet"></param>
 		public void HandlePacket(string packet)
         {
 			Console.WriteLine($"Server send: {packet}");
@@ -105,6 +124,10 @@ namespace ClientGUI.Communication
 			}
         }
 
+		/// <summary>
+		/// Writes to the server.
+		/// </summary>
+		/// <param name="message"></param>
         public void Write(string message)
         {
 			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
@@ -112,6 +135,9 @@ namespace ClientGUI.Communication
             this.stream.Flush();
         }
 
+		/// <summary>
+		/// Disconnect the communication
+		/// </summary>
         public void Disconnect()
         {
             this.stream.Close();
