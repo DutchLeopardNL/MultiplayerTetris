@@ -18,17 +18,17 @@ namespace ServerProject.Communication
 		private TcpListener listener;
         private SPSLogics onlinegame;
 		private bool running;
-		public List<ServerClient> clients { get; set; }
-        public Dictionary<string, Weapon> attackchoice { get; set; }
+		public List<ServerClient> Clients { get; set; }
+        public Dictionary<string, Weapon> Attackchoice { get; set; }
 		public Dictionary<string, int> Score { get; set; }
 
         public Server(int port)
         {
-			this.onlinegame = new SPSLogics();
             this.listener = new TcpListener(IPAddress.Any, port);
-            this.clients = new List<ServerClient>();
-            this.attackchoice = new Dictionary<string, Weapon>();
+			this.onlinegame = new SPSLogics();
 			this.running = true;
+			this.Clients = new List<ServerClient>();
+			this.Attackchoice = new Dictionary<string, Weapon>();
 		}
 
         public void Start()
@@ -39,17 +39,18 @@ namespace ServerProject.Communication
 
 			new Thread(new ThreadStart(Listen)).Start();
         }
+
         private void Listen()
         {
 			while (this.running)
 			{
-                if (this.attackchoice.Count == 2)
+                if (this.Attackchoice.Count == 2)
                 {
-                    int result = this.onlinegame.PlayGame(attackchoice["player1"], attackchoice["player2"]);
+                    int result = this.onlinegame.PlayGame(Attackchoice["player1"], Attackchoice["player2"]);
 					this.Broadcast($"result::{result}");
 
 					this.SaveScores(result);
-					this.attackchoice.Clear();
+					this.Attackchoice.Clear();
 				}
 
 				Thread.Sleep(1000);
@@ -58,7 +59,7 @@ namespace ServerProject.Communication
 
         public void Stop()
         {
-            foreach (var client in this.clients)
+            foreach (var client in this.Clients)
             {
                 client.Disconnect();
             }
@@ -67,12 +68,12 @@ namespace ServerProject.Communication
 
         private void OnConnect(IAsyncResult ar)
 		{ 
-			if (this.clients.Count < 2)
+			if (this.Clients.Count < 2)
 			{
 				TcpClient newClient = this.listener.EndAcceptTcpClient(ar);
 
-				string playerID = this.clients.Count == 0 ? "player1" : "player2"; //Determen if the connected client is player1 or player2
-				this.clients.Add(new ServerClient(newClient, this, playerID));
+				string playerID = this.Clients.Count == 0 ? "player1" : "player2"; //Determen if the connected client is player1 or player2
+				this.Clients.Add(new ServerClient(newClient, this, playerID));
 				Console.WriteLine("A new client Connected");
 				this.Broadcast(playerID);
 			}
@@ -82,7 +83,7 @@ namespace ServerProject.Communication
 
         public void Broadcast(string message)
         {
-            foreach (var client in this.clients)
+            foreach (var client in this.Clients)
             {
                 client.Write(message);
             }
@@ -92,7 +93,7 @@ namespace ServerProject.Communication
 		{
 			this.Score = FileIO.Read(path, "scores.txt");
 			
-			foreach (var client in this.clients)
+			foreach (var client in this.Clients)
 			{
 				if (!this.Score.Keys.Contains(client.Name))
 				{

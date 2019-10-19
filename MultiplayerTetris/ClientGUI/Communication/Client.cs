@@ -14,16 +14,16 @@ namespace ClientGUI.Communication
         private TcpClient client;
         private NetworkStream stream;
         private byte[] buffer;
-        private string totalBuffer;
-		public MainWindow mainWindow { get; set; }
-		public string playerID { get; set; }
+		private string eof;
+		public MainWindow MainWindow { get; set; }
+		public string PlayerID { get; set; }
 
         public Client()
         {
-			this.playerID = null;
             this.client = new TcpClient();
             this.buffer = new byte[1024];
-            this.totalBuffer = string.Empty;
+			this.eof = "##";
+			this.PlayerID = null;
 		}
 
         public async Task Connect(string host, int port)
@@ -41,12 +41,10 @@ namespace ClientGUI.Communication
 				int count = this.stream.EndRead(ar);
 				string input = Encrypter.Decrypt(this.buffer.SubArray(0, count), "password123");
 
-				string regex = "##";
-
-				while (input.Contains(regex))
+				while (input.Contains(this.eof))
 				{
-					string packet = input.Substring(0, input.IndexOf(regex));
-					input = input.Substring(input.IndexOf(regex) + regex.Length);
+					string packet = input.Substring(0, input.IndexOf(this.eof));
+					input = input.Substring(input.IndexOf(this.eof) + this.eof.Length);
 
 					this.HandlePacket(packet);
 				}
@@ -56,7 +54,6 @@ namespace ClientGUI.Communication
 			catch (IOException)
 			{
 				this.Disconnect();
-
 				Console.WriteLine("Server shut down");
 			}
         }
@@ -65,16 +62,16 @@ namespace ClientGUI.Communication
 
 		private void UpdateText(string message)
 		{
-			this.mainWindow.result.Text = (message + "\n");
+			this.MainWindow.result.Text = (message + "\n");
 		}
 
 		public void HandlePacket(string packet)
         {
 			Console.WriteLine($"Server send: {packet}");
 
-			if (packet.Contains("player") && this.playerID == null)
+			if (packet.Contains("player") && this.PlayerID == null)
 			{
-				this.playerID = packet;
+				this.PlayerID = packet;
 			}
 			else if (packet.Contains("result"))
 			{
@@ -82,26 +79,26 @@ namespace ClientGUI.Communication
 				switch (winLoseTie)
 				{
 					case -1:
-						if (this.playerID == "player1")
+						if (this.PlayerID == "player1")
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");                 
 						}
 						else
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");               
                         }
 						break;
 					case 0:
-						this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
+						this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "Tie!"); 
                         break;
 					case 1:
-						if (this.playerID == "player1")
+						if (this.PlayerID == "player1")
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You lost.");
                         }
 						else
 						{
-							this.mainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
+							this.MainWindow.result.Dispatcher.Invoke(new UpdateTextCallback(UpdateText), "You won!");
                         }
 						break;
 				}
@@ -110,8 +107,7 @@ namespace ClientGUI.Communication
 
         public void Write(string message)
         {
-			string regex = "##";
-			byte[] bytes = Encrypter.Encrypt($"{message}{regex}", "password123");
+			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
             this.stream.Flush();
         }

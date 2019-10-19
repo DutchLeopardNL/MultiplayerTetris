@@ -17,12 +17,10 @@ namespace ServerProject.Communication
 		private Server server;
 		private NetworkStream stream;
 		private byte[] buffer;
-        private string weapon;
-        private string name;
+		private string eof;
 		private static object lockObject = new object();
 		public string Name { get; set; }
 		public string PlayerID { get; set; }
-		public int Wins { get; set; }
 
 		public ServerClient(TcpClient client, Server server, string playerID)
 		{
@@ -30,6 +28,7 @@ namespace ServerProject.Communication
 			this.server = server;
 			this.stream = this.client.GetStream();
 			this.buffer = new byte[1024];
+			this.eof = "##";
 			this.PlayerID = playerID;
 
 			this.stream.BeginRead(this.buffer, 0, this.buffer.Length, new AsyncCallback(OnRead), null);
@@ -56,7 +55,7 @@ namespace ServerProject.Communication
 			}
 			catch (IOException)
 			{
-				this.server.clients.Remove(this);
+				this.server.Clients.Remove(this);
 				this.Disconnect();
 
 				Console.WriteLine("Client disconnected");
@@ -70,17 +69,17 @@ namespace ServerProject.Communication
 
 			if (packet.Contains("player"))
 			{
-				string[] nameAndAnswer = packet.Split(new[] { "::" }, StringSplitOptions.None);
-                name = nameAndAnswer[0];
-                weapon = nameAndAnswer[1];
+				string[] nameAndWeapon = packet.Split(new[] { "::" }, StringSplitOptions.None);
+                string name = nameAndWeapon[0];
+                string weapon = nameAndWeapon[1];
 
 				lock (lockObject)
 				{
-					this.server.attackchoice.Add(name, (Weapon)Enum.Parse(typeof(Weapon), weapon));
+					this.server.Attackchoice.Add(name, (Weapon)Enum.Parse(typeof(Weapon), weapon));
 				}
 
 				Console.WriteLine($"Name: {name} answered: {weapon}");
-                Console.WriteLine(server.attackchoice.Count);
+                Console.WriteLine(this.server.Attackchoice.Count);
 			}
 			else if (packet.Contains("name"))
 			{
@@ -90,8 +89,7 @@ namespace ServerProject.Communication
 
 		public void Write(string message)
 		{
-			string regex = "##";
-			byte[] bytes = Encrypter.Encrypt($"{message}{regex}", "password123");
+			byte[] bytes = Encrypter.Encrypt($"{message}{this.eof}", "password123");
 			this.stream.Write(bytes, 0, bytes.Length);
 			this.stream.Flush();
 		}
