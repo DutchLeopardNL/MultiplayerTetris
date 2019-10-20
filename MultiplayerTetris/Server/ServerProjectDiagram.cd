@@ -42,6 +42,10 @@
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="8.75" Y="2" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
   <Enum Name="ServerProject.GameLogics.Weapon">
     <Position X="1.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
